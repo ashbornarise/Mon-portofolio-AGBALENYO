@@ -189,6 +189,10 @@ section{padding:clamp(56px,10vh,110px) 0}
   position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;
   font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(236,235,230,.5);
 }
+/* média image / vidéo réels */
+.media img,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.media.has-media{background:#0d0f11}
+.media .glint{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 90% at 18% 0%,rgba(255,180,84,.14),transparent 52%)}
 .card-body{position:relative;z-index:2;padding:20px 22px 24px}
 .card-body h3{font-size:1.25rem;margin-bottom:6px}
 .card.feature .card-body h3{font-size:clamp(1.5rem,3.4vw,2.2rem)}
@@ -203,16 +207,38 @@ section{padding:clamp(56px,10vh,110px) 0}
 .stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:2.4rem;color:var(--glow);line-height:1}
 .stat span{font-size:.85rem;color:var(--muted);margin-top:8px;display:block}
 
-/* ---------- carte mentale compétences (école) ---------- */
-.mind{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center;padding:20px 0}
-.mind .node{
-  padding:14px 20px;border-radius:999px;font-weight:600;font-size:.9rem;
-  background:var(--bg2);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark);
-  transition:transform .3s var(--spring),color .3s ease,box-shadow .3s ease;cursor:default;
+/* ---------- la toile : réseau autour de « Simuler & Virtualiser » ---------- */
+.toile{position:relative;width:100%;height:clamp(480px,66vw,680px);margin-top:10px}
+@media(max-width:600px){.toile{height:clamp(540px,150vw,640px)}}
+.toile svg{position:absolute;inset:0;overflow:visible;pointer-events:none}
+.toile .edge{stroke:var(--stone);stroke-opacity:.16;stroke-width:1;transition:stroke-opacity .35s ease,stroke .35s ease,stroke-width .35s ease}
+.toile.lit .edge{stroke-opacity:.06}
+.toile .edge.hot{stroke:var(--glow);stroke-opacity:.9;stroke-width:1.6;filter:drop-shadow(0 0 4px var(--glow-soft))}
+.tnode{
+  position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;
+  text-align:center;border-radius:999px;user-select:none;white-space:nowrap;
+  transition:transform .35s var(--spring),opacity .35s ease,color .3s ease,box-shadow .35s ease,border-color .3s ease;
+  will-change:transform;
 }
-.mind .node:hover{color:var(--glow);transform:scale(1.07);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark),0 0 26px -4px var(--glow-soft)}
-.mind .core{background:var(--glow);color:#1a140a;font-size:1rem;box-shadow:0 0 34px -4px var(--glow)}
-.mind .core:hover{color:#1a140a}
+.tnode.skill{padding:11px 16px;font-size:.82rem;font-weight:600;color:var(--ink);background:var(--bg2);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark)}
+.tnode.project{padding:10px 15px;font-size:.8rem;font-weight:500;color:var(--muted);background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(12px);cursor:pointer}
+.tnode.core{
+  width:154px;height:154px;flex-direction:column;gap:3px;padding:12px;line-height:1.05;color:#1a140a;
+  font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.05rem;
+  background:radial-gradient(circle at 38% 32%,#ffd08a,var(--glow));
+  box-shadow:0 0 50px -6px var(--glow),inset 0 2px 7px rgba(255,255,255,.45);
+  animation:corepulse 5.5s ease-in-out infinite;cursor:default;
+}
+.tnode.core small{font-weight:700;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.68}
+@keyframes corepulse{0%,100%{box-shadow:0 0 42px -8px var(--glow),inset 0 2px 7px rgba(255,255,255,.45)}50%{box-shadow:0 0 72px -4px var(--glow),inset 0 2px 7px rgba(255,255,255,.45)}}
+.toile.lit .tnode:not(.hot):not(.core){opacity:.3}
+.tnode.skill:hover,.tnode.hot.skill{color:var(--glow);transform:translate(-50%,-50%) scale(1.08);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark),0 0 26px -4px var(--glow-soft)}
+.tnode.project:hover,.tnode.hot.project{color:var(--ink);border-color:var(--glow);transform:translate(-50%,-50%) scale(1.08)}
+@media(max-width:720px){
+  .tnode.core{width:120px;height:120px;font-size:.84rem}
+  .tnode.skill{font-size:.72rem;padding:9px 12px}
+  .tnode.project{font-size:.7rem;padding:8px 11px}
+}
 
 /* ---------- ventures ---------- */
 .ventures{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
@@ -356,13 +382,17 @@ footer .switch a:hover{color:var(--glow)}
   <section class="wrap" id="ecole-projets">
     <div class="sec-head"><p class="eyebrow">Projet phare</p></div>
     <div class="grid">
-      <article class="card feature" data-project="bionique">
+      <article class="card feature" data-project="apis">
         <span class="role">Projet phare</span>
-        <div class="media"><span class="ph">Main 3D · rendu / vidéo</span></div>
+        <div class="media has-media">
+          <video class="lazy-video" muted loop playsinline preload="none"
+                 poster="assets/apis-poster.jpg" data-src="assets/apis.mp4" aria-label="APIS — robot autonome, vidéo"></video>
+          <span class="glint"></span>
+        </div>
         <div class="card-body">
-          <h3>Main bionique connectée</h3>
-          <p class="one">Main 3D à tendons pilotée par signal EMG, ESP32 BLE et app smartphone, avec IA de reconnaissance de gestes.</p>
-          <div class="card-tags"><span>EMG</span><span>ESP32 BLE</span><span>Impression 3D</span><span>IA gestes</span><span>App mobile</span></div>
+          <h3>APIS — robot autonome</h3>
+          <p class="one">Robot Ø60 mm conçu en CAO paramétrique par code (CadQuery), vérifié en simulation : interférences, masse, centre de gravité, stabilité.</p>
+          <div class="card-tags"><span>CAO par code</span><span>Simulation</span><span>Électronique</span><span>IA de trajectoire</span><span>Rendu 3D</span></div>
         </div>
       </article>
     </div>
@@ -396,18 +426,14 @@ footer .switch a:hover{color:var(--glow)}
     </div>
   </section>
 
-  <!-- bilan de compétences : carte mentale -->
-  <section class="wrap">
-    <div class="sec-head"><p class="eyebrow">Mon bilan de compétences</p><h2>Simuler et Virtualiser</h2></div>
-    <div class="mind">
-      <span class="node">Modélisation CAO</span>
-      <span class="node">Calcul &amp; FEM</span>
-      <span class="core">Simuler &amp; Virtualiser</span>
-      <span class="node">Électronique embarquée</span>
-      <span class="node">Programmation</span>
-      <span class="node">Métrologie</span>
-      <span class="node">Fabrication / usinage</span>
+  <!-- bilan de compétences : la toile -->
+  <section class="wrap" id="ecole-bilan">
+    <div class="sec-head">
+      <p class="eyebrow">Mon bilan de compétences</p>
+      <h2>Une toile autour de « Simuler &amp; Virtualiser »</h2>
+      <p>Chaque projet tire un fil vers les compétences qu'il met en jeu. Survolez un nœud, cliquez un projet.</p>
     </div>
+    <div class="toile" id="toile" aria-hidden="true"></div>
   </section>
 
   <!-- pastilles compétences -->
@@ -557,11 +583,11 @@ const CONFIG = {
    DÉTAILS PROJETS (3 à 5 lignes max au clic + liens optionnels)
    ===================================================================== */
 const PROJECTS = {
-  bionique:{role:"Projet phare",title:"Main bionique connectée",lines:[
-    "Main 3D à tendons imprimée et assemblée.",
-    "Pilotage par signal EMG capté sur l'avant-bras.",
-    "ESP32 en BLE relié à une app smartphone.",
-    "IA de reconnaissance de gestes.",
+  apis:{role:"Projet phare",title:"APIS — robot autonome",media:"assets/apis-hero.jpg",lines:[
+    "Robot Ø60 mm conçu en CAO paramétrique par code (CadQuery / OpenCascade).",
+    "Vérification simulée : interférences, jeux, masse ≈ 86,5 g, centre de gravité, basculement.",
+    "Électronique embarquée, marqueur ArUco, capteurs de distance.",
+    "IA de trajectoire et de rôles (3 étapes), rendu 3D et pub.",
   ],links:[]},
   bras:{role:"Chef de projet",title:"Bras robotique",lines:[
     "Conception mécanique et choix des actionneurs.",
@@ -654,6 +680,8 @@ function render(){
   window.scrollTo(0,0);
   observeCards();
   markActiveNav();
+  initLazyVideos();
+  if(r==="ecole"){ requestAnimationFrame(()=>requestAnimationFrame(layoutToile)); }
 }
 window.addEventListener("hashchange",render);
 
@@ -729,6 +757,9 @@ function openPanel(key){
   lastFocus=document.activeElement;
   document.getElementById("p-role").textContent=p.role||"";
   document.getElementById("p-title").textContent=p.title||"";
+  const pm=document.getElementById("p-media");
+  if(p.media){ pm.style.backgroundImage=`url("${p.media}")`; pm.style.backgroundSize="cover"; pm.style.backgroundPosition="center"; }
+  else { pm.style.backgroundImage=""; }
   const ul=document.getElementById("p-lines"); ul.innerHTML="";
   (p.lines||[]).slice(0,5).forEach(l=>{const li=document.createElement("li");li.textContent=l;ul.appendChild(li);});
   const lk=document.getElementById("p-links"); lk.innerHTML="";
@@ -768,9 +799,154 @@ function buildContacts(){
   });
 }
 
+/* =====================================================================
+   VIDÉOS EN BOUCLE — chargées paresseusement (perf) + reduced-motion
+   ===================================================================== */
+let lazyInit=false;
+function initLazyVideos(){
+  if(lazyInit) return; lazyInit=true;
+  const vids=[...document.querySelectorAll(".lazy-video")];
+  if(!vids.length) return;
+  if(reduce){ return; } // on garde le poster, pas de lecture auto
+  if(!("IntersectionObserver" in window)){ vids.forEach(play); return; }
+  const vio=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) play(e.target); else e.target.pause();
+    });
+  },{threshold:.25});
+  vids.forEach(v=>vio.observe(v));
+  function play(v){
+    if(!v.src && v.dataset.src){ v.src=v.dataset.src; }
+    const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{});
+  }
+}
+
+/* =====================================================================
+   LA TOILE — réseau « Simuler & Virtualiser »
+   Cœur ambre central ; compétences en anneau intérieur ;
+   projets en anneau extérieur, reliés aux compétences qu'ils mobilisent.
+   ===================================================================== */
+const TOILE={
+  skills:[
+    {id:"cao",   label:"CAO",           short:"CAO"},
+    {id:"sim",   label:"Simulation",    short:"Simu"},
+    {id:"elec",  label:"Électronique",  short:"Élec"},
+    {id:"prog",  label:"Programmation", short:"Code"},
+    {id:"metro", label:"Métrologie",    short:"Métro"},
+    {id:"fab",   label:"Usinage",       short:"Usinage"},
+  ],
+  projects:[
+    {id:"apis",      label:"APIS",          short:"APIS",     links:["cao","sim","elec","prog","fab"]},
+    {id:"bras",      label:"Bras robotique",short:"Bras",     links:["cao","fab","prog"]},
+    {id:"relaxvest", label:"RelaxVest",     short:"RelaxVest",links:["elec","prog"]},
+    {id:"cnc",       label:"Tour CNC",      short:"CNC",      links:["fab","metro"]},
+    {id:"esig",      label:"App ESIG",      short:"ESIG",     links:["prog"]},
+  ],
+};
+let toileBuilt=false;
+const Tnode={};   // id -> element
+const Tadj={};    // id -> {edges:[lineEl], nodes:Set}
+function addAdj(id){ if(!Tadj[id]) Tadj[id]={edges:[],nodes:new Set()}; return Tadj[id]; }
+
+function buildToile(){
+  const box=document.getElementById("toile"); if(!box||toileBuilt) return;
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg"); svg.setAttribute("class","toile-svg");
+  box.appendChild(svg);
+
+  // cœur
+  const core=document.createElement("div");
+  core.className="tnode core"; core.dataset.id="core";
+  core.innerHTML='<small>Compétence</small>Simuler &amp;<br>Virtualiser';
+  box.appendChild(core); Tnode.core=core; addAdj("core");
+
+  // nœuds compétences + projets
+  [...TOILE.skills,...TOILE.projects].forEach(n=>{
+    const el=document.createElement("div");
+    const isProj=TOILE.projects.includes(n);
+    el.className="tnode "+(isProj?"project":"skill");
+    el.dataset.id=n.id; el.innerHTML='<span class="lbl">'+n.label+'</span>';
+    if(isProj){ el.dataset.project=n.id; }
+    box.appendChild(el); Tnode[n.id]=el; addAdj(n.id);
+  });
+
+  // arêtes : cœur -> chaque compétence
+  TOILE.skills.forEach(s=>makeEdge("core",s.id));
+  // arêtes : projet -> compétences mobilisées
+  TOILE.projects.forEach(p=>p.links.forEach(s=>makeEdge(p.id,s)));
+
+  function makeEdge(a,b){
+    const l=document.createElementNS(svgNS,"line");
+    l.setAttribute("class","edge"); l.dataset.a=a; l.dataset.b=b;
+    svg.appendChild(l);
+    addAdj(a).edges.push(l); addAdj(b).edges.push(l);
+    Tadj[a].nodes.add(b); Tadj[b].nodes.add(a);
+  }
+  box._svg=svg;
+
+  // interactions : survol par nœud (pas de scintillement), clic = projet
+  Object.values(Tnode).forEach(el=>{
+    el.addEventListener("mouseenter",()=>lightUp(el.dataset.id));
+    el.addEventListener("mouseleave",lightDown);
+  });
+  box.addEventListener("click",e=>{ const t=e.target.closest(".tnode.project"); if(t) openPanel(t.dataset.project); });
+
+  toileBuilt=true;
+}
+
+function lightUp(id){
+  const box=document.getElementById("toile"); box.classList.add("lit");
+  if(id==="core"){ // le cœur illumine toute la toile
+    box.querySelectorAll(".edge").forEach(l=>l.classList.add("hot"));
+    box.querySelectorAll(".tnode").forEach(n=>n.classList.add("hot"));
+    return;
+  }
+  const adj=Tadj[id]; if(!adj) return;
+  adj.edges.forEach(l=>l.classList.add("hot"));
+  Tnode[id].classList.add("hot");
+  adj.nodes.forEach(n=>Tnode[n] && Tnode[n].classList.add("hot"));
+}
+function lightDown(){
+  const box=document.getElementById("toile"); box.classList.remove("lit");
+  box.querySelectorAll(".hot").forEach(el=>el.classList.remove("hot"));
+}
+
+function layoutToile(){
+  const box=document.getElementById("toile"); if(!box||!toileBuilt) return;
+  const w=box.clientWidth, h=box.clientHeight; if(!w||!h) return;
+  const svg=box._svg; svg.setAttribute("width",w); svg.setAttribute("height",h);
+  svg.setAttribute("viewBox","0 0 "+w+" "+h);
+  const cx=w/2, cy=h/2;
+  place(Tnode.core,cx,cy);
+  const nS=TOILE.skills.length, nP=TOILE.projects.length;
+  // écran étroit : libellés courts, horizontale resserrée, verticale étirée
+  const narrow=w<600;
+  const rxS=w*(narrow?0.19:0.27), ryS=h*(narrow?0.27:0.27);
+  const rxP=w*(narrow?0.38:0.42), ryP=h*(narrow?0.45:0.43);
+  [...TOILE.skills,...TOILE.projects].forEach(n=>{
+    const lbl=Tnode[n.id] && Tnode[n.id].querySelector(".lbl");
+    if(lbl) lbl.textContent = narrow ? (n.short||n.label) : n.label;
+  });
+  TOILE.skills.forEach((s,i)=>{ const a=-Math.PI/2 + i*2*Math.PI/nS;
+    place(Tnode[s.id], cx+rxS*Math.cos(a), cy+ryS*Math.sin(a)); });
+  TOILE.projects.forEach((p,i)=>{ const a=-Math.PI/2 + Math.PI/nP + i*2*Math.PI/nP;
+    place(Tnode[p.id], cx+rxP*Math.cos(a), cy+ryP*Math.sin(a)); });
+  // positionner les arêtes depuis le centre des nœuds
+  svg.querySelectorAll(".edge").forEach(l=>{
+    const A=pos(Tnode[l.dataset.a]), B=pos(Tnode[l.dataset.b]);
+    l.setAttribute("x1",A.x); l.setAttribute("y1",A.y);
+    l.setAttribute("x2",B.x); l.setAttribute("y2",B.y);
+  });
+  function place(el,x,y){ el.style.left=x+"px"; el.style.top=y+"px"; el._x=x; el._y=y; }
+  function pos(el){ return {x:el._x, y:el._y}; }
+}
+let toileRaf;
+window.addEventListener("resize",()=>{ cancelAnimationFrame(toileRaf); toileRaf=requestAnimationFrame(layoutToile); },{passive:true});
+
 /* init */
 document.getElementById("year").textContent=new Date().getFullYear();
 buildContacts();
+buildToile();
 render();
 onScroll();
 </script>
