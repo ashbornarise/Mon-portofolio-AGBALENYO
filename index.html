@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clément Agbalenyo — Portfolio</title>
+<meta name="description" content="Clément Agbalenyo — simulation, mécatronique, usinage. Portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Direction : objet usiné éclairé en studio.
+   Fond anthracite + grain. Matières kaki/olive/pierre.
+   UN seul éclat : ambre #ffb454.
+   ============================================================ */
+:root{
+  --bg:#15171a;
+  --bg2:#1e2124;
+  --kaki:#6b6f4e;
+  --olive:#8a8f63;
+  --stone:#9aa0a6;
+  --ink:#ecebe6;
+  --muted:#9aa0a6;
+  --glow:#ffb454;          /* l'unique couleur d'éclat */
+  --glow-soft:rgba(255,180,84,.14);
+  --glass:rgba(255,255,255,.06);
+  --glass-brd:rgba(255,255,255,.12);
+  --r:24px;
+  --r-sm:16px;
+  --maxw:1180px;
+  /* néomorphique : double ombre claire/sombre */
+  --neo-dark:rgba(0,0,0,.55);
+  --neo-light:rgba(255,255,255,.045);
+  --spring:cubic-bezier(.22,1.2,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* léger grain */
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+h1,h2,h3,.hero-title,.brand{
+  font-family:'Bricolage Grotesque','Sora',sans-serif;
+  font-weight:700;letter-spacing:-.02em;line-height:1.05;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ---------- décor liquid : blobs flous qui dérivent ---------- */
+.liquid{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform}
+.blob.a{width:46vw;height:46vw;left:-10vw;top:-8vw;background:radial-gradient(circle,var(--kaki),transparent 68%);animation:drift1 26s var(--spring) infinite alternate}
+.blob.b{width:40vw;height:40vw;right:-8vw;top:18vh;background:radial-gradient(circle,var(--olive),transparent 70%);opacity:.38;animation:drift2 32s var(--spring) infinite alternate}
+.blob.c{width:28vw;height:28vw;left:30vw;bottom:-10vw;background:radial-gradient(circle,var(--glow-soft),transparent 72%);animation:drift3 30s var(--spring) infinite alternate}
+@keyframes drift1{to{transform:translate3d(8vw,6vh,0) scale(1.15)}}
+@keyframes drift2{to{transform:translate3d(-7vw,-5vh,0) scale(1.1)}}
+@keyframes drift3{to{transform:translate3d(5vw,-8vh,0) scale(1.2)}}
+
+/* point lumineux qui suit le curseur */
+.cursor-glow{
+  position:fixed;z-index:1;width:460px;height:460px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,var(--glow-soft),transparent 60%);
+  transform:translate(-50%,-50%);left:50%;top:40%;opacity:0;transition:opacity .6s ease;
+  will-change:transform;mix-blend-mode:screen;
+}
+
+/* ---------- layout ---------- */
+.wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+section{padding:clamp(56px,10vh,110px) 0}
+.eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--glow);font-weight:600;margin-bottom:14px}
+.lead{color:var(--muted);max-width:46ch;font-size:1.05rem}
+
+/* ---------- nav flottante en verre ---------- */
+.nav{
+  position:fixed;z-index:40;left:50%;top:18px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;border-radius:999px;
+  background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-brd);
+  box-shadow:0 10px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.14);
+  transition:padding .4s var(--spring),top .4s var(--spring),gap .4s var(--spring);
+  max-width:calc(100vw - 28px);
+}
+.nav.condensed{padding:6px 10px;top:12px;gap:4px}
+.nav .brand{font-size:1rem;padding:0 12px;white-space:nowrap}
+.nav .brand b{color:var(--glow)}
+.nav-links{display:flex;gap:2px}
+.nav a.navlink{
+  position:relative;padding:9px 15px;border-radius:999px;font-size:.9rem;color:var(--muted);
+  font-weight:500;transition:color .3s ease;white-space:nowrap;
+}
+.nav a.navlink:hover{color:var(--ink)}
+.nav a.navlink.active{color:var(--ink)}
+/* soulignement lumineux du lien actif */
+.nav a.navlink.active::after{
+  content:"";position:absolute;left:15px;right:15px;bottom:4px;height:2px;border-radius:2px;
+  background:var(--glow);box-shadow:0 0 10px var(--glow);
+}
+@media(max-width:560px){.nav .brand{display:none}}
+
+/* ---------- boutons néomorphiques ---------- */
+.neo{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;
+  font-family:inherit;font-size:.92rem;font-weight:600;color:var(--ink);
+  padding:13px 22px;border-radius:var(--r-sm);background:var(--bg2);
+  box-shadow:-5px -5px 12px var(--neo-light), 6px 6px 16px var(--neo-dark);
+  transition:box-shadow .25s var(--spring),transform .25s var(--spring),color .25s ease;
+}
+.neo:hover{color:var(--glow);transform:translateY(-2px)}
+.neo:active{
+  transform:translateY(0);
+  box-shadow:inset -3px -3px 8px var(--neo-light), inset 4px 4px 10px var(--neo-dark);
+}
+.neo.primary{color:var(--glow)}
+.neo.ghost{background:transparent;box-shadow:none;border:1px solid var(--glass-brd)}
+.neo.ghost:hover{background:var(--glass)}
+
+/* ---------- pastilles (compétences / offres) ---------- */
+.pills{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.pill{
+  padding:10px 18px;border-radius:999px;font-size:.88rem;font-weight:500;color:var(--ink);
+  background:var(--bg2);
+  box-shadow:-4px -4px 10px var(--neo-light), 5px 5px 12px var(--neo-dark);
+  transition:transform .25s var(--spring),color .25s ease;
+}
+.pill:hover{transform:translateY(-3px);color:var(--glow)}
+.pill.soft{color:var(--muted);font-style:italic}
+.pill .tag{font-size:.72rem;color:var(--glow);margin-right:6px;font-weight:600}
+
+/* offres : pastilles plus grandes, titre + une ligne */
+.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:8px}
+.offer{
+  padding:22px;border-radius:var(--r-sm);background:var(--bg2);
+  box-shadow:-5px -5px 12px var(--neo-light), 6px 6px 16px var(--neo-dark);
+  transition:transform .3s var(--spring);
+}
+.offer:hover{transform:translateY(-4px)}
+.offer h3{font-size:1.08rem;margin-bottom:6px}
+.offer p{color:var(--muted);font-size:.9rem}
+.offer .no{font-size:.8rem;color:var(--glow);font-weight:600;letter-spacing:.1em}
+
+/* ---------- grille projets : grandes cartes glass ---------- */
+.grid{display:grid;gap:22px;grid-template-columns:repeat(12,1fr)}
+.card{
+  grid-column:span 6;position:relative;border-radius:var(--r);overflow:hidden;cursor:pointer;
+  background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-brd);
+  box-shadow:0 18px 50px rgba(0,0,0,.42);
+  transition:transform .4s var(--spring),box-shadow .4s var(--spring);
+  transform-style:preserve-3d;
+  /* apparition au scroll */
+  opacity:0;translate:0 34px;
+}
+.card.in{opacity:1;translate:0 0}
+.card.feature{grid-column:span 12}
+.card.third{grid-column:span 4}
+/* reflet en haut */
+.card::before{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:var(--r);
+  background:linear-gradient(160deg,rgba(255,255,255,.16),transparent 42%);
+}
+/* éclat sur le bord au survol */
+.card::after{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:var(--r);
+  box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .4s ease,opacity .4s ease;opacity:0;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.card:hover::after{opacity:1;box-shadow:inset 0 0 0 1px var(--glow),0 0 32px -6px var(--glow-soft)}
+.media{
+  position:relative;width:100%;aspect-ratio:16/10;
+  background:
+    radial-gradient(130% 90% at 20% 0%,rgba(255,180,84,.10),transparent 55%),
+    linear-gradient(135deg,var(--kaki),var(--bg2) 70%);
+}
+.card.feature .media{aspect-ratio:21/9}
+.card.third .media{aspect-ratio:4/3}
+.media .ph{
+  position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(236,235,230,.5);
+}
+.card-body{position:relative;z-index:2;padding:20px 22px 24px}
+.card-body h3{font-size:1.25rem;margin-bottom:6px}
+.card.feature .card-body h3{font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.card-body .one{color:var(--muted);font-size:.92rem;max-width:52ch}
+.card-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.card-tags span{font-size:.72rem;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--glass-brd);color:var(--stone)}
+.role{position:absolute;top:16px;left:16px;z-index:4;font-size:.72rem;font-weight:600;letter-spacing:.08em;padding:6px 12px;border-radius:999px;background:rgba(21,23,26,.6);border:1px solid var(--glass-brd);color:var(--glow);backdrop-filter:blur(8px)}
+
+/* ---------- chiffres ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.stat{padding:26px 22px;border-radius:var(--r-sm);background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(18px);text-align:center}
+.stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:2.4rem;color:var(--glow);line-height:1}
+.stat span{font-size:.85rem;color:var(--muted);margin-top:8px;display:block}
+
+/* ---------- carte mentale compétences (école) ---------- */
+.mind{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center;padding:20px 0}
+.mind .node{
+  padding:14px 20px;border-radius:999px;font-weight:600;font-size:.9rem;
+  background:var(--bg2);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark);
+  transition:transform .3s var(--spring),color .3s ease,box-shadow .3s ease;cursor:default;
+}
+.mind .node:hover{color:var(--glow);transform:scale(1.07);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark),0 0 26px -4px var(--glow-soft)}
+.mind .core{background:var(--glow);color:#1a140a;font-size:1rem;box-shadow:0 0 34px -4px var(--glow)}
+.mind .core:hover{color:#1a140a}
+
+/* ---------- ventures ---------- */
+.ventures{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.venture{padding:22px;border-radius:var(--r-sm);background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(18px);transition:transform .3s var(--spring)}
+.venture:hover{transform:translateY(-4px)}
+.venture h3{font-size:1.05rem;margin-bottom:4px}
+.venture p{color:var(--muted);font-size:.85rem}
+
+/* ---------- hero ---------- */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px}
+.hero-title{font-size:clamp(2.6rem,8vw,5.4rem);max-width:15ch}
+.hero-title em{font-style:normal;color:var(--glow)}
+.hero .sub{margin-top:22px;font-size:1.15rem;color:var(--muted);max-width:44ch}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+
+/* ---------- panneau détail projet (glass) ---------- */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(10,11,13,.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .35s ease}
+.overlay.open{opacity:1;pointer-events:auto}
+.panel{
+  position:fixed;z-index:61;right:0;top:0;height:100%;width:min(460px,92vw);
+  background:var(--glass);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+  border-left:1px solid var(--glass-brd);
+  box-shadow:-30px 0 80px rgba(0,0,0,.5);
+  transform:translateX(100%);transition:transform .45s var(--spring);
+  padding:72px 32px 32px;overflow-y:auto;
+}
+.panel.open{transform:translateX(0)}
+.panel h2{font-size:1.9rem;margin-bottom:6px}
+.panel .p-role{color:var(--glow);font-size:.82rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.panel .p-lines{margin-top:18px;color:var(--ink)}
+.panel .p-lines li{list-style:none;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:.95rem}
+.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:20px;background:linear-gradient(135deg,var(--olive),var(--bg2) 72%)}
+.panel .p-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.panel-close{
+  position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;border:none;
+  background:var(--bg2);color:var(--ink);font-size:1.1rem;
+  box-shadow:-3px -3px 8px var(--neo-light),4px 4px 10px var(--neo-dark);transition:transform .25s var(--spring),color .25s ease;
+}
+.panel-close:hover{color:var(--glow);transform:rotate(90deg)}
+
+/* ---------- contact ---------- */
+.contact-box{text-align:center;padding:clamp(40px,8vw,80px) 0}
+.contact-box h2{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:16px}
+.contact-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+
+/* ---------- pied de page + lien discret de bascule ---------- */
+footer{position:relative;z-index:2;padding:40px 0;border-top:1px solid rgba(255,255,255,.07);text-align:center;color:var(--muted);font-size:.82rem}
+footer .switch{margin-top:10px;font-size:.78rem}
+footer .switch a{color:var(--stone);text-decoration:underline;text-underline-offset:3px;transition:color .25s ease}
+footer .switch a:hover{color:var(--glow)}
+
+/* ---------- page d'accueil : deux grandes cartes ---------- */
+.home{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 60px}
+.home .name{font-size:clamp(1.8rem,5vw,3rem)}
+.home .tiny{color:var(--muted);margin-top:12px;max-width:40ch}
+.choose{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;width:100%;max-width:860px;margin-top:48px}
+.choice{
+  position:relative;padding:44px 32px;border-radius:var(--r);overflow:hidden;text-align:left;cursor:pointer;
+  background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--glass-brd);
+  box-shadow:0 18px 50px rgba(0,0,0,.4);
+  transition:transform .4s var(--spring),box-shadow .4s var(--spring);
+}
+.choice::before{content:"";position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(160deg,rgba(255,255,255,.14),transparent 45%);pointer-events:none}
+.choice:hover{transform:translateY(-8px);box-shadow:0 34px 80px rgba(0,0,0,.6)}
+.choice:hover .arrow{transform:translateX(6px);color:var(--glow)}
+.choice .k{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--glow);font-weight:600}
+.choice h2{font-size:1.9rem;margin:14px 0 10px}
+.choice p{color:var(--muted);font-size:.95rem}
+.choice .arrow{display:inline-block;margin-top:24px;font-size:1.3rem;transition:transform .3s var(--spring),color .3s ease}
+
+/* ---------- utilitaires sections / vues ---------- */
+.view{display:none}
+.view.active{display:block}
+.sec-head{margin-bottom:34px}
+.sec-head h2{font-size:clamp(1.7rem,4vw,2.6rem)}
+.sec-head p{color:var(--muted);margin-top:8px;max-width:50ch}
+
+@media(max-width:820px){
+  .card,.card.third{grid-column:span 12}
+  .panel{width:100vw;border-left:none}
+}
+
+/* ---------- accessibilité : mouvement réduit ---------- */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .card{opacity:1;translate:0 0}
+  .cursor-glow{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- décor liquid -->
+<div class="liquid" aria-hidden="true">
+  <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
+</div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav" aria-label="Navigation principale">
+  <a class="brand" href="#" id="navBrand">C.<b>A</b></a>
+  <div class="nav-links" id="navLinks"></div>
+</nav>
+
+<!-- ============ ACCUEIL (sans hash) ============ -->
+<main class="view" id="view-home">
+  <div class="home">
+    <p class="eyebrow">Portfolio</p>
+    <h1 class="name">Clément Agbalenyo</h1>
+    <p class="tiny">Simulation, mécatronique, usinage. Choisissez la version qui vous concerne.</p>
+    <div class="choose">
+      <a class="choice" href="#ecole">
+        <span class="k">École d'ingénieur</span>
+        <h2>Version école</h2>
+        <p>Pour un jury d'admission : projets, bilan de compétences et trajectoire vers la simulation.</p>
+        <span class="arrow">→</span>
+      </a>
+      <a class="choice" href="#pro">
+        <span class="k">Clients &amp; entreprises</span>
+        <h2>Version pro</h2>
+        <p>Pour une collaboration : réalisations livrées, offres de services et ventures.</p>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- ============ ÉCOLE ============ -->
+<main class="view" id="view-ecole">
+  <section class="hero wrap">
+    <p class="eyebrow">BUT 3 GMP — parcours SNRV · IUT de Saint-Denis</p>
+    <h1 class="hero-title">Simuler et <em>virtualiser.</em></h1>
+    <p class="sub">Clément Agbalenyo. Objectif : école d'ingénieur, puis ingénieur en simulation.</p>
+    <div class="cta">
+      <a class="neo primary" href="#ecole-contact">Me contacter</a>
+      <a class="neo ghost" href="#ecole-projets">Voir les projets</a>
+    </div>
+  </section>
+
+  <!-- projet phare -->
+  <section class="wrap" id="ecole-projets">
+    <div class="sec-head"><p class="eyebrow">Projet phare</p></div>
+    <div class="grid">
+      <article class="card feature" data-project="bionique">
+        <span class="role">Projet phare</span>
+        <div class="media"><span class="ph">Main 3D · rendu / vidéo</span></div>
+        <div class="card-body">
+          <h3>Main bionique connectée</h3>
+          <p class="one">Main 3D à tendons pilotée par signal EMG, ESP32 BLE et app smartphone, avec IA de reconnaissance de gestes.</p>
+          <div class="card-tags"><span>EMG</span><span>ESP32 BLE</span><span>Impression 3D</span><span>IA gestes</span><span>App mobile</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- autres projets -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Autres projets</p></div>
+    <div class="grid">
+      <article class="card" data-project="bras">
+        <span class="role">Chef de projet</span>
+        <div class="media"><span class="ph">Bras robotique</span></div>
+        <div class="card-body"><h3>Bras robotique</h3><p class="one">Conception et coordination d'équipe.</p>
+          <div class="card-tags"><span>Robotique</span><span>Gestion de projet</span></div></div>
+      </article>
+      <article class="card" data-project="relaxvest">
+        <div class="media"><span class="ph">RelaxVest</span></div>
+        <div class="card-body"><h3>RelaxVest</h3><p class="one">Gilet de relaxation : 12 moteurs pilotés, ESP32 et app Flutter.</p>
+          <div class="card-tags"><span>ESP32</span><span>Flutter</span><span>12 moteurs</span></div></div>
+      </article>
+      <article class="card" data-project="cnc">
+        <div class="media"><span class="ph">Tour CNC</span></div>
+        <div class="card-body"><h3>Remise en service d'un tour CNC</h3><p class="one">Diagnostic, réparation et retour à la production.</p>
+          <div class="card-tags"><span>CNC</span><span>Maintenance</span></div></div>
+      </article>
+      <article class="card" data-project="esig">
+        <div class="media"><span class="ph">Application web ESIG</span></div>
+        <div class="card-body"><h3>Application web de l'atelier ESIG</h3><p class="one">Outil numérique pour l'atelier.</p>
+          <div class="card-tags"><span>Web</span><span>Atelier</span></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- bilan de compétences : carte mentale -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Mon bilan de compétences</p><h2>Simuler et Virtualiser</h2></div>
+    <div class="mind">
+      <span class="node">Modélisation CAO</span>
+      <span class="node">Calcul &amp; FEM</span>
+      <span class="core">Simuler &amp; Virtualiser</span>
+      <span class="node">Électronique embarquée</span>
+      <span class="node">Programmation</span>
+      <span class="node">Métrologie</span>
+      <span class="node">Fabrication / usinage</span>
+    </div>
+  </section>
+
+  <!-- pastilles compétences -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Compétences</p></div>
+    <div class="pills">
+      <span class="pill">SolidWorks</span><span class="pill">Fusion 360</span><span class="pill">Python</span>
+      <span class="pill">ESP32</span><span class="pill">Grafcet</span><span class="pill">Métrologie</span>
+      <span class="pill soft"><span class="tag">En cours</span>Abaqus</span>
+      <span class="pill soft"><span class="tag">En cours</span>Ansys</span>
+      <span class="pill soft"><span class="tag">En cours</span>Catia</span>
+      <span class="pill soft"><span class="tag">En cours</span>CSWA</span>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section class="wrap" id="ecole-contact">
+    <div class="contact-box">
+      <p class="eyebrow">Contact</p>
+      <h2>Parlons de la suite.</h2>
+      <p class="lead" style="margin:0 auto">Disponible pour un entretien d'admission ou un échange.</p>
+      <div class="contact-links" id="contact-ecole"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ PRO ============ -->
+<main class="view" id="view-pro">
+  <section class="hero wrap">
+    <p class="eyebrow">Mécanique · Électronique · Code</p>
+    <h1 class="hero-title">De l'idée au <em>livrable.</em></h1>
+    <p class="sub">Six chantiers livrés en parallèle en 2026.</p>
+    <div class="cta">
+      <a class="neo primary" href="#pro-contact">Démarrer un projet</a>
+      <a class="neo ghost" href="#pro-real">Voir les réalisations</a>
+    </div>
+  </section>
+
+  <!-- offres -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Offres</p></div>
+    <div class="offers">
+      <div class="offer"><span class="no">01</span><h3>CNC &amp; usinage</h3><p>Programmation, réglage, production.</p></div>
+      <div class="offer"><span class="no">02</span><h3>Prototypage mécatronique</h3><p>De la carte au produit testé.</p></div>
+      <div class="offer"><span class="no">03</span><h3>Outils numériques sur mesure</h3><p>Web, automatisation, data.</p></div>
+      <div class="offer"><span class="no">04</span><h3>Création &amp; distribution musicale</h3><p>Production et diffusion.</p></div>
+    </div>
+  </section>
+
+  <!-- réalisations -->
+  <section class="wrap" id="pro-real">
+    <div class="sec-head"><p class="eyebrow">Réalisations</p></div>
+    <div class="grid">
+      <article class="card" data-project="tour">
+        <div class="media"><span class="ph">Tour CNC</span></div>
+        <div class="card-body"><h3>Tour CNC remis en service</h3><p class="one">Machine diagnostiquée, réparée, remise en production.</p>
+          <div class="card-tags"><span>CNC</span><span>Maintenance</span></div></div>
+      </article>
+      <article class="card" data-project="fraiseuse">
+        <div class="media"><span class="ph">Fraiseuse</span></div>
+        <div class="card-body"><h3>Diagnostic d'une fraiseuse</h3><p class="one">Expertise et plan de remise en état.</p>
+          <div class="card-tags"><span>Diagnostic</span><span>Usinage</span></div></div>
+      </article>
+      <article class="card" data-project="validateur">
+        <div class="media"><span class="ph">Validateur CNC</span></div>
+        <div class="card-body"><h3>Validateur de programmes CNC</h3><p class="one">Vérification automatique du G-code avant usinage.</p>
+          <div class="card-tags"><span>Python</span><span>G-code</span></div></div>
+      </article>
+      <article class="card" data-project="crm">
+        <div class="media"><span class="ph">CRM + site + facturation</span></div>
+        <div class="card-body"><h3>CRM + site + facturation</h3><p class="one">Suite numérique complète pour une activité.</p>
+          <div class="card-tags"><span>Web</span><span>CRM</span><span>Facturation</span></div></div>
+      </article>
+      <article class="card" data-project="relaxvest-pro">
+        <div class="media"><span class="ph">RelaxVest</span></div>
+        <div class="card-body"><h3>RelaxVest</h3><p class="one">Gilet de relaxation connecté : ESP32, Flutter, 12 moteurs.</p>
+          <div class="card-tags"><span>ESP32</span><span>Flutter</span><span>Mécatronique</span></div></div>
+      </article>
+      <article class="card" data-project="swug">
+        <div class="media"><span class="ph">SWUG Togo</span></div>
+        <div class="card-body"><h3>Meetup SWUG Togo</h3><p class="one">Organisation d'un meetup SolidWorks User Group.</p>
+          <div class="card-tags"><span>Communauté</span><span>SolidWorks</span></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- chiffres -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Chiffres</p></div>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>chantiers livrés</span></div>
+      <div class="stat"><b>91/98</b><span>PageSpeed mobile / desktop</span></div>
+      <div class="stat"><b>4</b><span>contrats-types</span></div>
+      <div class="stat"><b>9</b><span>niveaux tarifaires studio</span></div>
+    </div>
+  </section>
+
+  <!-- ventures -->
+  <section class="wrap">
+    <div class="sec-head"><p class="eyebrow">Ventures</p></div>
+    <div class="ventures">
+      <div class="venture"><h3>Nova Luz Music Label</h3><p>Label musical.</p></div>
+      <div class="venture"><h3>Cauri Charts</h3><p>Classements &amp; data musicale.</p></div>
+      <div class="venture"><h3>CYNERA</h3><p>Robotique &amp; ingénierie.</p></div>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section class="wrap" id="pro-contact">
+    <div class="contact-box">
+      <p class="eyebrow">Contact</p>
+      <h2>Un projet en tête ?</h2>
+      <p class="lead" style="margin:0 auto">Décrivez votre besoin, je reviens vers vous.</p>
+      <div class="contact-links" id="contact-pro"></div>
+    </div>
+  </section>
+</main>
+
+<!-- panneau détail projet -->
+<div class="overlay" id="overlay"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Détail du projet">
+  <button class="panel-close" id="panelClose" aria-label="Fermer (Échap)">✕</button>
+  <p class="p-role" id="p-role"></p>
+  <h2 id="p-title"></h2>
+  <div class="p-media" id="p-media"></div>
+  <ul class="p-lines" id="p-lines"></ul>
+  <div class="p-links" id="p-links"></div>
+</aside>
+
+<!-- pied de page + bascule discrète -->
+<footer class="wrap" id="footer">
+  <div>© <span id="year"></span> Clément Agbalenyo</div>
+  <div class="switch" id="footerSwitch"></div>
+</footer>
+
+<script>
+/* =====================================================================
+   CONFIGURATION — renseigner ces liens (laisser vide pour masquer)
+   ===================================================================== */
+const CONFIG = {
+  email:    "agbalenyoclementkokou@gmail.com",
+  linkedin: "",                      // ex : https://linkedin.com/in/...
+  github:   "https://github.com/ashbornarise"
+};
+
+/* =====================================================================
+   DÉTAILS PROJETS (3 à 5 lignes max au clic + liens optionnels)
+   ===================================================================== */
+const PROJECTS = {
+  bionique:{role:"Projet phare",title:"Main bionique connectée",lines:[
+    "Main 3D à tendons imprimée et assemblée.",
+    "Pilotage par signal EMG capté sur l'avant-bras.",
+    "ESP32 en BLE relié à une app smartphone.",
+    "IA de reconnaissance de gestes.",
+  ],links:[]},
+  bras:{role:"Chef de projet",title:"Bras robotique",lines:[
+    "Conception mécanique et choix des actionneurs.",
+    "Coordination de l'équipe projet.",
+    "Prototype fonctionnel.",
+  ],links:[]},
+  relaxvest:{role:"Mécatronique",title:"RelaxVest",lines:[
+    "Gilet de relaxation à 12 moteurs pilotés.",
+    "Carte ESP32 et application Flutter.",
+    "Séquences de vibration paramétrables.",
+  ],links:[]},
+  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",lines:[
+    "Diagnostic complet de la machine.",
+    "Réparation mécanique et électronique.",
+    "Retour à la production.",
+  ],links:[]},
+  esig:{role:"Développement web",title:"Application web de l'atelier ESIG",lines:[
+    "Outil numérique pour la gestion de l'atelier.",
+    "Interface web dédiée aux usages réels.",
+  ],links:[]},
+  tour:{role:"Réalisation",title:"Tour CNC remis en service",lines:[
+    "Machine diagnostiquée et réparée.",
+    "Remise en production validée.",
+  ],links:[]},
+  fraiseuse:{role:"Réalisation",title:"Diagnostic d'une fraiseuse",lines:[
+    "Expertise de l'état de la machine.",
+    "Plan de remise en état chiffré.",
+  ],links:[]},
+  validateur:{role:"Réalisation",title:"Validateur de programmes CNC",lines:[
+    "Vérification automatique du G-code.",
+    "Détection d'erreurs avant usinage.",
+    "Écrit en Python.",
+  ],links:[]},
+  crm:{role:"Réalisation",title:"CRM + site + facturation",lines:[
+    "Suite numérique complète pour une activité.",
+    "Gestion clients, vitrine et facturation.",
+    "PageSpeed 91/98.",
+  ],links:[]},
+  "relaxvest-pro":{role:"Réalisation",title:"RelaxVest",lines:[
+    "Gilet de relaxation connecté livré.",
+    "ESP32, Flutter, 12 moteurs.",
+  ],links:[]},
+  swug:{role:"Réalisation",title:"Meetup SWUG Togo",lines:[
+    "Organisation d'un meetup SolidWorks User Group.",
+    "Animation de la communauté locale.",
+  ],links:[]},
+};
+
+/* =====================================================================
+   ROUTAGE par location.hash
+   ===================================================================== */
+const VIEWS = {home:"view-home", ecole:"view-ecole", pro:"view-pro"};
+const NAVS = {
+  ecole:[["Projets","#ecole-projets"],["Compétences","#ecole-contact"],["Contact","#ecole-contact"]],
+  pro:[["Réalisations","#pro-real"],["Ventures","#pro-contact"],["Contact","#pro-contact"]],
+};
+
+function currentRoute(){
+  const h=(location.hash||"").replace("#","").split(/[^a-z\-]/i)[0];
+  if(h==="ecole") return "ecole";
+  if(h==="pro")   return "pro";
+  return "home";
+}
+
+function render(){
+  const r=currentRoute();
+  Object.values(VIEWS).forEach(id=>document.getElementById(id).classList.remove("active"));
+  document.getElementById(VIEWS[r]).classList.add("active");
+
+  const nav=document.getElementById("nav");
+  nav.style.display = r==="home" ? "none" : "flex";
+
+  // liens de nav selon la version
+  const links=document.getElementById("navLinks");
+  links.innerHTML="";
+  if(r!=="home"){
+    (NAVS[r]||[]).forEach(([label,href])=>{
+      const a=document.createElement("a");
+      a.className="navlink";a.href=href;a.textContent=label;
+      links.appendChild(a);
+    });
+  }
+
+  // bascule discrète en pied de page
+  const sw=document.getElementById("footerSwitch");
+  if(r==="ecole") sw.innerHTML='Vous êtes une entreprise ? <a href="#pro">Voir la version pro</a>';
+  else if(r==="pro") sw.innerHTML='Membre d\'un jury ? <a href="#ecole">Voir la version école</a>';
+  else sw.innerHTML='<a href="#ecole">Version école</a> · <a href="#pro">Version pro</a>';
+
+  window.scrollTo(0,0);
+  observeCards();
+  markActiveNav();
+}
+window.addEventListener("hashchange",render);
+
+/* =====================================================================
+   NAV : condensation au défilement + lien actif
+   ===================================================================== */
+const nav=document.getElementById("nav");
+function onScroll(){ nav.classList.toggle("condensed", window.scrollY>40); }
+window.addEventListener("scroll",onScroll,{passive:true});
+
+function markActiveNav(){
+  const links=[...document.querySelectorAll(".navlink")];
+  if(!links.length) return;
+  const targets=links.map(a=>({a,el:document.querySelector(a.getAttribute("href"))})).filter(t=>t.el);
+  const mark=()=>{
+    let best=targets[0];
+    const y=window.scrollY+140;
+    targets.forEach(t=>{ if(t.el.offsetTop<=y) best=t; });
+    links.forEach(a=>a.classList.remove("active"));
+    if(best) best.a.classList.add("active");
+  };
+  mark();
+  window.addEventListener("scroll",mark,{passive:true});
+}
+
+/* =====================================================================
+   APPARITION DES CARTES AU SCROLL
+   ===================================================================== */
+let io;
+function observeCards(){
+  if(io) io.disconnect();
+  const cards=document.querySelectorAll(".view.active .card");
+  if(!("IntersectionObserver" in window)){cards.forEach(c=>c.classList.add("in"));return;}
+  io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);} });
+  },{threshold:.15});
+  cards.forEach(c=>io.observe(c));
+}
+
+/* =====================================================================
+   TILT au survol (profondeur) — désactivé si reduced-motion
+   ===================================================================== */
+const reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(!reduce){
+  document.addEventListener("mousemove",e=>{
+    const card=e.target.closest(".card");
+    if(!card) return;
+    const r=card.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-6px) rotateX(${(-py*5).toFixed(2)}deg) rotateY(${(px*6).toFixed(2)}deg)`;
+  });
+  document.addEventListener("mouseout",e=>{
+    const card=e.target.closest(".card");
+    if(card && !card.contains(e.relatedTarget)) card.style.transform="";
+  });
+
+  // point lumineux qui suit le curseur
+  const glow=document.getElementById("cursorGlow");
+  let gx=innerWidth/2,gy=innerHeight/2,cx=gx,cy=gy;
+  document.addEventListener("mousemove",e=>{gx=e.clientX;gy=e.clientY;glow.style.opacity=.9;},{passive:true});
+  (function loop(){ cx+=(gx-cx)*.08; cy+=(gy-cy)*.08; glow.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
+}
+
+/* =====================================================================
+   PANNEAU DÉTAIL PROJET
+   ===================================================================== */
+const overlay=document.getElementById("overlay");
+const panel=document.getElementById("panel");
+let lastFocus=null;
+
+function openPanel(key){
+  const p=PROJECTS[key]; if(!p) return;
+  lastFocus=document.activeElement;
+  document.getElementById("p-role").textContent=p.role||"";
+  document.getElementById("p-title").textContent=p.title||"";
+  const ul=document.getElementById("p-lines"); ul.innerHTML="";
+  (p.lines||[]).slice(0,5).forEach(l=>{const li=document.createElement("li");li.textContent=l;ul.appendChild(li);});
+  const lk=document.getElementById("p-links"); lk.innerHTML="";
+  (p.links||[]).forEach(([label,href])=>{ if(!href)return; const a=document.createElement("a");a.className="neo";a.href=href;a.target="_blank";a.rel="noopener";a.textContent=label;lk.appendChild(a);});
+  overlay.classList.add("open"); panel.classList.add("open");
+  document.getElementById("panelClose").focus();
+}
+function closePanel(){
+  overlay.classList.remove("open"); panel.classList.remove("open");
+  if(lastFocus) lastFocus.focus();
+}
+document.addEventListener("click",e=>{
+  const card=e.target.closest(".card[data-project]");
+  if(card){ openPanel(card.getAttribute("data-project")); }
+});
+document.getElementById("panelClose").addEventListener("click",closePanel);
+overlay.addEventListener("click",closePanel);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePanel(); });
+
+/* =====================================================================
+   LIENS DE CONTACT (masqués si vide)
+   ===================================================================== */
+function buildContacts(){
+  const items=[];
+  if(CONFIG.email)    items.push(["Email",     "mailto:"+CONFIG.email]);
+  if(CONFIG.linkedin) items.push(["LinkedIn",  CONFIG.linkedin]);
+  if(CONFIG.github)   items.push(["GitHub",    CONFIG.github]);
+  ["contact-ecole","contact-pro"].forEach(id=>{
+    const box=document.getElementById(id); if(!box) return; box.innerHTML="";
+    items.forEach(([label,href],i)=>{
+      const a=document.createElement("a");
+      a.className="neo"+(i===0?" primary":"");
+      a.href=href; a.textContent=label;
+      if(!href.startsWith("mailto:")){a.target="_blank";a.rel="noopener";}
+      box.appendChild(a);
+    });
+  });
+}
+
+/* init */
+document.getElementById("year").textContent=new Date().getFullYear();
+buildContacts();
+render();
+onScroll();
+</script>
+</body>
+</html>
