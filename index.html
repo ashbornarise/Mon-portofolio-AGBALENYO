@@ -1051,27 +1051,32 @@ function flowResize(){
   flowCanvas.width=flowW*dpr; flowCanvas.height=flowH*dpr;
   flowCtx=flowCanvas.getContext("2d"); flowCtx.setTransform(dpr,0,0,dpr,0,0);
 }
-// ===== Fleuve de particules hexagonales qui traverse la page =====
-// Deux bandes (fleuves) qui méandrent ; des hexagones gris y dérivent,
-// quelques-uns dorés (points précis).
-const RIVERS=[
-  {y0:0.34, amp:0.17, k:0.0017, k2:0.0045, drift:0.00022, half:0.14},
-  {y0:0.70, amp:0.13, k:0.0021, k2:0.0038, drift:-0.00018, half:0.11},
-];
-function riverY(R,x,t){
-  return flowH*R.y0
-    + Math.sin(x*R.k + t*R.drift)*(flowH*R.amp)
-    + Math.sin(x*R.k2 - t*R.drift*1.6)*(flowH*R.amp*0.33);
-}
+// ===== Fluide vertical qui remonte (bas → haut) avec plusieurs affluents =====
+// Des affluents partent du bas, méandrent, puis convergent vers un tronc
+// central en remontant. Texture dense d'hexagones gris, un peu sombre.
+let flowTribs=[];
+function easeIO(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 function flowSeed(){
-  flowHex=[];
-  const per=Math.min(170, Math.round(flowW/8));
-  RIVERS.forEach((R,ri)=>{
+  flowHex=[]; flowTribs=[];
+  const nT=5, trunk=flowW*(0.46+Math.random()*0.08);
+  for(let i=0;i<nT;i++){
+    flowTribs.push({
+      xStart: flowW*(0.10 + 0.80*(i/(nT-1))),
+      trunk,
+      conv: 0.52 + Math.random()*0.22,          // hauteur (s) où l'affluent rejoint le tronc
+      amp: 38 + Math.random()*46,
+      freq: 1.5 + Math.random()*1.8,
+      phase: Math.random()*6.283,
+      drift: (Math.random()*2-1)*0.00022
+    });
+  }
+  const per=Math.min(150, Math.round(flowH/6));
+  flowTribs.forEach((T,ti)=>{
     for(let i=0;i<per;i++){
-      flowHex.push({ri, x:Math.random()*flowW, off:(Math.random()*2-1),
-        r:3+Math.random()*7, rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.012,
-        v:0.3+Math.random()*0.9, gold:Math.random()<0.07,
-        a:0.1+Math.random()*0.22});
+      flowHex.push({ti, s:Math.random(), off:(Math.random()*2-1),
+        r:2.4+Math.random()*6.4, rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.012,
+        ds:0.0016+Math.random()*0.0036, gold:Math.random()<0.055,
+        a:0.18+Math.random()*0.28});
     }
   });
 }
@@ -1082,27 +1087,37 @@ function hexPath(cx,cy,r,rot){
     i?flowCtx.lineTo(px,py):flowCtx.moveTo(px,py); }
   flowCtx.closePath();
 }
+// x du canal d'un affluent à la hauteur s (0 = bas, 1 = haut)
+function channelX(T,s,t){
+  const e=easeIO(Math.min(1, s/T.conv));
+  const baseX=T.xStart + (T.trunk-T.xStart)*e;
+  const meander=T.amp*(1-e)*Math.sin(s*T.freq*6.283 + T.phase + t*T.drift);
+  return baseX+meander;
+}
 function flowDraw(animate){
   flowCtx.clearRect(0,0,flowW,flowH);
-  // lit du fleuve : bande grise très douce le long du méandre
-  RIVERS.forEach(R=>{
-    const half=flowH*R.half;
+  // corps du fluide : chaque affluent = bande sombre douce ;
+  // là où ils se rejoignent, les bandes se superposent → tronc plus sombre
+  for(const T of flowTribs){
     flowCtx.beginPath();
-    for(let x=-20;x<=flowW+20;x+=18){ const y=riverY(R,x,flowClock); x<=-20?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
-    flowCtx.strokeStyle="rgba(120,126,136,0.05)"; flowCtx.lineWidth=half*2; flowCtx.lineCap="round"; flowCtx.stroke();
-  });
-  // hexagones qui dérivent dans le fleuve
+    for(let s=0;s<=1.0001;s+=0.03){ const x=channelX(T,s,flowClock), y=flowH*(1-s); s===0?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
+    flowCtx.strokeStyle="rgba(72,78,90,0.05)"; flowCtx.lineWidth=flowW*0.055; flowCtx.lineCap="round"; flowCtx.lineJoin="round"; flowCtx.stroke();
+  }
+  // hexagones (texture du fluide) qui remontent
   for(const h of flowHex){
-    const R=RIVERS[h.ri], half=flowH*R.half;
-    if(animate){ h.x+=h.v; h.rot+=h.vr; if(h.x>flowW+20){ h.x=-20; h.off=Math.random()*2-1; } }
-    const cy=riverY(R,h.x,flowClock)+h.off*half;
-    hexPath(h.x,cy,h.r,h.rot);
+    const T=flowTribs[h.ti];
+    if(animate){ h.s+=h.ds; h.rot+=h.vr; if(h.s>1){ h.s=0; h.off=Math.random()*2-1; } }
+    const e=easeIO(Math.min(1,h.s/T.conv));
+    const half=(flowW*0.030)*(1-0.45*e);
+    const cx=channelX(T,h.s,flowClock)+h.off*half;
+    const cy=flowH*(1-h.s);
+    hexPath(cx,cy,h.r,h.rot);
     if(h.gold){
-      flowCtx.fillStyle="rgba(245,166,35,0.14)"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(245,166,35,0.75)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
+      flowCtx.fillStyle="rgba(240,160,40,0.16)"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(224,146,30,0.85)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
     }else{
-      flowCtx.fillStyle="rgba(120,126,136,"+(h.a*0.35)+")"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(96,102,112,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
+      flowCtx.fillStyle="rgba(66,72,84,"+(h.a*0.5)+")"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(56,62,74,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
     }
   }
   if(animate) flowClock+=16;
