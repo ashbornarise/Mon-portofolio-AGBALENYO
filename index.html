@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="drap">
+<html lang="fr" data-theme="aimant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -394,8 +394,8 @@ footer .switch a:hover{color:var(--glow)}
 
 <!-- sélecteur de thème -->
 <div class="theme-switch" id="themeSwitch" role="group" aria-label="Thème">
-  <button type="button" data-t="drap" title="Thème drap (lin clair)" aria-label="Thème drap" aria-pressed="true"></button>
-  <button type="button" data-t="aimant" title="Thème aimant (blanc, fluides magnétiques)" aria-label="Thème aimant" aria-pressed="false"></button>
+  <button type="button" data-t="aimant" title="Thème aimant (blanc, fleuve d'hexagones)" aria-label="Thème aimant" aria-pressed="true"></button>
+  <button type="button" data-t="drap" title="Thème drap (lin clair)" aria-label="Thème drap" aria-pressed="false"></button>
 </div>
 
 <!-- ============ NAV ============ -->
@@ -1042,7 +1042,7 @@ document.getElementById("themeSwitch").addEventListener("click",e=>{
    FLUIDES MAGNÉTIQUES — champ de flux de particules grises (thème aimant)
    Lignes grises qui traversent la page ; quelques points dorés précis.
    ===================================================================== */
-let flowRAF=null, flowLines=[], flowDots=[], flowCtx=null, flowW=0, flowH=0;
+let flowRAF=null, flowHex=[], flowCtx=null, flowW=0, flowH=0, flowClock=0;
 const flowCanvas=document.getElementById("flow");
 function flowResize(){
   if(!flowCanvas) return;
@@ -1051,48 +1051,61 @@ function flowResize(){
   flowCanvas.width=flowW*dpr; flowCanvas.height=flowH*dpr;
   flowCtx=flowCanvas.getContext("2d"); flowCtx.setTransform(dpr,0,0,dpr,0,0);
 }
-// lignes de champ parallèles qui balaient toute la hauteur
-function flowSeed(){
-  flowLines=[]; flowDots=[];
-  const gap=44, n=Math.ceil(flowH/gap)+2;
-  for(let i=0;i<n;i++){
-    flowLines.push({
-      baseY:i*gap - gap,
-      amp:9 + (i%3)*5 + Math.random()*7,
-      k:0.0045 + Math.random()*0.0035,
-      phase:Math.random()*6.283,
-      speed:0.003 + Math.random()*0.004,
-      gold:(i%6===2)                       // ~1 ligne sur 6 dorée
-    });
-  }
-  const dn=Math.max(5, Math.round(flowW/220));
-  for(let i=0;i<dn;i++){
-    flowDots.push({line:Math.floor(Math.random()*flowLines.length), x:Math.random()*flowW, v:0.5+Math.random()*0.9});
-  }
+// ===== Fleuve de particules hexagonales qui traverse la page =====
+// Deux bandes (fleuves) qui méandrent ; des hexagones gris y dérivent,
+// quelques-uns dorés (points précis).
+const RIVERS=[
+  {y0:0.34, amp:0.17, k:0.0017, k2:0.0045, drift:0.00022, half:0.14},
+  {y0:0.70, amp:0.13, k:0.0021, k2:0.0038, drift:-0.00018, half:0.11},
+];
+function riverY(R,x,t){
+  return flowH*R.y0
+    + Math.sin(x*R.k + t*R.drift)*(flowH*R.amp)
+    + Math.sin(x*R.k2 - t*R.drift*1.6)*(flowH*R.amp*0.33);
 }
-function flowLineY(L,x){
-  return L.baseY + L.amp*Math.sin(x*L.k + L.phase) + 5*Math.sin(x*L.k*0.4 + L.phase*1.3);
+function flowSeed(){
+  flowHex=[];
+  const per=Math.min(170, Math.round(flowW/8));
+  RIVERS.forEach((R,ri)=>{
+    for(let i=0;i<per;i++){
+      flowHex.push({ri, x:Math.random()*flowW, off:(Math.random()*2-1),
+        r:3+Math.random()*7, rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.012,
+        v:0.3+Math.random()*0.9, gold:Math.random()<0.07,
+        a:0.1+Math.random()*0.22});
+    }
+  });
+}
+function hexPath(cx,cy,r,rot){
+  flowCtx.beginPath();
+  for(let i=0;i<6;i++){ const an=rot + i*Math.PI/3;
+    const px=cx+Math.cos(an)*r, py=cy+Math.sin(an)*r;
+    i?flowCtx.lineTo(px,py):flowCtx.moveTo(px,py); }
+  flowCtx.closePath();
 }
 function flowDraw(animate){
   flowCtx.clearRect(0,0,flowW,flowH);
-  for(const L of flowLines){
-    if(animate) L.phase += L.speed;
+  // lit du fleuve : bande grise très douce le long du méandre
+  RIVERS.forEach(R=>{
+    const half=flowH*R.half;
     flowCtx.beginPath();
-    for(let x=-12;x<=flowW+12;x+=12){ const y=flowLineY(L,x); x<=-12?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
-    flowCtx.strokeStyle = L.gold ? "rgba(245,166,35,0.26)" : "rgba(98,104,114,0.19)";
-    flowCtx.lineWidth = L.gold ? 1.3 : 1;
-    flowCtx.stroke();
+    for(let x=-20;x<=flowW+20;x+=18){ const y=riverY(R,x,flowClock); x<=-20?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
+    flowCtx.strokeStyle="rgba(120,126,136,0.05)"; flowCtx.lineWidth=half*2; flowCtx.lineCap="round"; flowCtx.stroke();
+  });
+  // hexagones qui dérivent dans le fleuve
+  for(const h of flowHex){
+    const R=RIVERS[h.ri], half=flowH*R.half;
+    if(animate){ h.x+=h.v; h.rot+=h.vr; if(h.x>flowW+20){ h.x=-20; h.off=Math.random()*2-1; } }
+    const cy=riverY(R,h.x,flowClock)+h.off*half;
+    hexPath(h.x,cy,h.r,h.rot);
+    if(h.gold){
+      flowCtx.fillStyle="rgba(245,166,35,0.14)"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(245,166,35,0.75)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
+    }else{
+      flowCtx.fillStyle="rgba(120,126,136,"+(h.a*0.35)+")"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(96,102,112,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
+    }
   }
-  // points dorés précis qui circulent le long des lignes
-  for(const d of flowDots){
-    if(animate){ d.x += d.v; if(d.x>flowW+12) d.x=-12; }
-    const L=flowLines[d.line]; if(!L) continue;
-    const y=flowLineY(L,d.x);
-    flowCtx.beginPath(); flowCtx.arc(d.x,y,2,0,6.283);
-    flowCtx.fillStyle="rgba(245,166,35,0.9)"; flowCtx.fill();
-    flowCtx.beginPath(); flowCtx.arc(d.x,y,5,0,6.283);
-    flowCtx.fillStyle="rgba(245,166,35,0.12)"; flowCtx.fill();
-  }
+  if(animate) flowClock+=16;
 }
 function flowStep(){ if(!flowCtx){ flowRAF=null; return; } flowDraw(true); flowRAF=requestAnimationFrame(flowStep); }
 function startFlow(){
@@ -1120,7 +1133,7 @@ gradePills();
 render();
 onScroll();
 (function initTheme(){
-  let t="drap"; try{ t=localStorage.getItem("portfolio-theme")||"drap"; }catch(e){}
+  let t="aimant"; try{ t=localStorage.getItem("portfolio-theme")||"aimant"; }catch(e){}
   applyTheme(t);
 })();
 </script>
