@@ -1058,25 +1058,29 @@ let flowTribs=[];
 function easeIO(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 function flowSeed(){
   flowHex=[]; flowTribs=[];
-  const nT=5, trunk=flowW*(0.46+Math.random()*0.08);
+  const nT=7;
+  const trunkR=flowW*0.82;        // tronc principal à droite
+  const splitIdx=3;               // un affluent monte droit au centre → coupe l'écran en deux
   for(let i=0;i<nT;i++){
+    const isSplit=(i===splitIdx);
     flowTribs.push({
-      xStart: flowW*(0.10 + 0.80*(i/(nT-1))),
-      trunk,
-      conv: 0.52 + Math.random()*0.22,          // hauteur (s) où l'affluent rejoint le tronc
-      amp: 38 + Math.random()*46,
-      freq: 1.5 + Math.random()*1.8,
-      phase: Math.random()*6.283,
-      drift: (Math.random()*2-1)*0.00022
+      xStart: isSplit ? flowW*0.5 : flowW*(0.06 + 0.9*(i/(nT-1))),
+      trunk:  isSplit ? flowW*0.5 : trunkR,
+      conv:   isSplit ? 0.42 : 0.5 + Math.random()*0.22,
+      amp:    isSplit ? 10 : 34 + Math.random()*44,   // le central ondule à peine
+      freq:   1.4 + Math.random()*1.7,
+      phase:  Math.random()*6.283,
+      drift:  (Math.random()*2-1)*0.00012              // dérive lente
     });
   }
-  const per=Math.min(150, Math.round(flowH/6));
+  const per=100;                  // densité
   flowTribs.forEach((T,ti)=>{
     for(let i=0;i<per;i++){
       flowHex.push({ti, s:Math.random(), off:(Math.random()*2-1),
-        r:2.4+Math.random()*6.4, rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.012,
-        ds:0.0016+Math.random()*0.0036, gold:Math.random()<0.055,
-        a:0.18+Math.random()*0.28});
+        r:2+Math.random()*11, rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.009,
+        ds:0.0006+Math.random()*0.0011,                // montée lente
+        gold:Math.random()<0.05,
+        a:0.26+Math.random()*0.34});                   // plus sombre
     }
   });
 }
@@ -1101,7 +1105,7 @@ function flowDraw(animate){
   for(const T of flowTribs){
     flowCtx.beginPath();
     for(let s=0;s<=1.0001;s+=0.03){ const x=channelX(T,s,flowClock), y=flowH*(1-s); s===0?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
-    flowCtx.strokeStyle="rgba(72,78,90,0.05)"; flowCtx.lineWidth=flowW*0.055; flowCtx.lineCap="round"; flowCtx.lineJoin="round"; flowCtx.stroke();
+    flowCtx.strokeStyle="rgba(52,58,70,0.07)"; flowCtx.lineWidth=flowW*0.05; flowCtx.lineCap="round"; flowCtx.lineJoin="round"; flowCtx.stroke();
   }
   // hexagones (texture du fluide) qui remontent
   for(const h of flowHex){
@@ -1113,11 +1117,11 @@ function flowDraw(animate){
     const cy=flowH*(1-h.s);
     hexPath(cx,cy,h.r,h.rot);
     if(h.gold){
-      flowCtx.fillStyle="rgba(240,160,40,0.16)"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(224,146,30,0.85)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
+      flowCtx.fillStyle="rgba(240,160,40,0.18)"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(214,138,26,0.9)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
     }else{
-      flowCtx.fillStyle="rgba(66,72,84,"+(h.a*0.5)+")"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(56,62,74,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
+      flowCtx.fillStyle="rgba(40,46,58,"+(h.a*0.6)+")"; flowCtx.fill();
+      flowCtx.strokeStyle="rgba(32,38,50,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
     }
   }
   if(animate) flowClock+=16;
