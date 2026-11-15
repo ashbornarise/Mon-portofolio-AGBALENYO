@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="aimant">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,41 +10,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   Direction : drap de lin clair, mat, opaque.
-   Objet sombre posé sur le tissu, éclairé en studio.
-   UN seul éclat : ambre profond (texte) + ambre lumineux (halos).
+   Thème unique — clair, net, pro.
+   Fond #F4F8FA · Texte/boutons/diagrammes bleu pétrole #0F3D47
+   · Accent soft peach #F59E7B · ombres douces.
    ============================================================ */
 :root{
+  --bg:#F4F8FA;              /* fond du site */
+  --surface:#ffffff;         /* cartes, nav, panneaux */
+  --paper:#ffffff;
+  --bg2:#eaf1f4;             /* surface légèrement teintée */
+  --ink:#0F3D47;             /* bleu pétrole — texte, boutons, diagrammes */
+  --muted:#5b7d84;           /* pétrole adouci — texte secondaire */
+  --stone:#8aa4ab;
+  --accent:#F59E7B;          /* soft peach — accent (aplats, soulignés, points) */
+  --accent-ink:#c75c38;      /* peach profond — texte accent (WCAG AA sur clair) */
+  --accent-soft:rgba(245,158,123,.22);
+  /* alias conservés pour les composants existants */
+  --glow:var(--accent-ink);
+  --glow-bright:var(--accent);
+  --glow-soft:var(--accent-soft);
+  --glass:#ffffff;
+  --glass-brd:rgba(15,61,71,.12);
+  --neo-light:#ffffff; --neo-dark:rgba(15,61,71,.10);
+  /* ombres douces (sous boutons et sections) */
+  --soft-sh:0 10px 26px rgba(15,61,71,.10);
+  --soft-sh-h:0 18px 40px rgba(15,61,71,.16);
+  --btn-sh:0 8px 18px rgba(15,61,71,.16);
   --r:24px;
   --r-sm:16px;
   --maxw:1180px;
   --spring:cubic-bezier(.22,1.2,.36,1);
-}
-/* ====== THÈME 1 — DRAP (lin clair, mat, chaud) ====== */
-html[data-theme="drap"]{
-  --bg:#efeae0; --bg2:#f7f3ea; --paper:#fbf9f3;
-  --kaki:#6b6f4e; --olive:#8a8f63; --stone:#8f9088;
-  --ink:#26271f; --muted:#6c6e62;
-  --glow:#95540b;          /* ambre profond — texte (WCAG AA) */
-  --glow-bright:#e79a3a;   /* ambre lumineux — halos, cœur */
-  --glow-soft:rgba(231,154,58,.20);
-  --glass:#fbf9f3; --glass-brd:rgba(38,39,31,.10);
-  --neo-dark:rgba(120,110,86,.30); --neo-light:rgba(255,255,255,.95);
-  --soft-sh:0 18px 48px rgba(84,76,58,.14);
-  --soft-sh-h:0 28px 64px rgba(84,76,58,.22);
-}
-/* ====== THÈME 2 — AIMANT (blanc pur, fluides magnétiques gris, doré) ====== */
-html[data-theme="aimant"]{
-  --bg:#ffffff; --bg2:#f5f6f7; --paper:#ffffff;
-  --kaki:#9aa0a6; --olive:#aeb3b8; --stone:#c2c5cc;
-  --ink:#1b1c1f; --muted:#6a6d73;
-  --glow:#a0670c;          /* doré profond — texte (WCAG AA sur blanc) */
-  --glow-bright:#f5a623;   /* jaune-orange doré — points précis */
-  --glow-soft:rgba(245,166,35,.22);
-  --glass:#ffffff; --glass-brd:rgba(20,22,26,.09);
-  --neo-dark:rgba(150,155,165,.26); --neo-light:#ffffff;
-  --soft-sh:0 16px 40px rgba(50,54,62,.12);
-  --soft-sh-h:0 26px 56px rgba(50,54,62,.2);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -52,54 +47,17 @@ body{
   font-family:'Inter',system-ui,sans-serif;
   color:var(--ink);
   background:var(--bg);
-  background-attachment:fixed;
   line-height:1.5;
   min-height:100vh;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  transition:background .5s ease,color .5s ease;
 }
-/* fond du drap (dégradés chauds) — thème 1 uniquement */
-html[data-theme="drap"] body{
-  background:
-    radial-gradient(120% 80% at 50% -8%, #f7f3ea, transparent 60%),
-    radial-gradient(90% 60% at 90% 110%, #e8e2d5, transparent 55%),
-    var(--bg);
-}
-/* grain de tissu — thème drap uniquement, en multiply */
-body::after{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-html[data-theme="aimant"] body::after{opacity:0}
-/* canvas des fluides magnétiques — thème aimant uniquement */
-.flow{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:none}
-html[data-theme="aimant"] .flow{display:block}
-html[data-theme="aimant"] .liquid{display:none}
 h1,h2,h3,.hero-title,.brand{
   font-family:'Bricolage Grotesque','Sora',sans-serif;
   font-weight:700;letter-spacing:-.02em;line-height:1.05;
 }
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
-
-/* ---------- plis du drap : ombres douces qui dérivent lentement ---------- */
-.liquid{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.blob{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
-.blob.a{width:50vw;height:50vw;left:-12vw;top:-10vw;background:radial-gradient(circle,rgba(150,146,118,.22),transparent 66%);opacity:.9;mix-blend-mode:multiply;animation:drift1 28s var(--spring) infinite alternate}
-.blob.b{width:44vw;height:44vw;right:-10vw;top:16vh;background:radial-gradient(circle,rgba(168,162,132,.18),transparent 70%);opacity:.9;mix-blend-mode:multiply;animation:drift2 34s var(--spring) infinite alternate}
-.blob.c{width:30vw;height:30vw;left:28vw;bottom:-12vw;background:radial-gradient(circle,var(--glow-soft),transparent 72%);opacity:.5;animation:drift3 30s var(--spring) infinite alternate}
-@keyframes drift1{to{transform:translate3d(8vw,6vh,0) scale(1.15)}}
-@keyframes drift2{to{transform:translate3d(-7vw,-5vh,0) scale(1.1)}}
-@keyframes drift3{to{transform:translate3d(5vw,-8vh,0) scale(1.2)}}
-
-/* halo chaud discret qui suit le curseur */
-.cursor-glow{
-  position:fixed;z-index:1;width:420px;height:420px;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,var(--glow-soft),transparent 62%);
-  transform:translate(-50%,-50%);left:50%;top:40%;opacity:0;transition:opacity .6s ease;
-  will-change:transform;
-}
 
 /* ---------- layout ---------- */
 .wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 24px}
@@ -114,7 +72,7 @@ section{padding:clamp(56px,10vh,110px) 0}
   padding:10px 14px;border-radius:999px;
   background:var(--paper);
   border:1px solid var(--glass-brd);
-  box-shadow:0 10px 34px rgba(84,76,58,.16), inset 0 1px 0 rgba(255,255,255,.8);
+  box-shadow:0 10px 30px rgba(15,61,71,.12), inset 0 1px 0 rgba(255,255,255,.9);
   transition:padding .4s var(--spring),top .4s var(--spring),gap .4s var(--spring);
   max-width:calc(100vw - 28px);
 }
@@ -135,43 +93,44 @@ section{padding:clamp(56px,10vh,110px) 0}
 }
 @media(max-width:560px){.nav .brand{display:none}}
 
-/* ---------- boutons néomorphiques ---------- */
+/* ---------- boutons (bleu pétrole + ombre douce) ---------- */
 .neo{
-  display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
   font-family:inherit;font-size:.92rem;font-weight:600;color:var(--ink);
-  padding:13px 22px;border-radius:var(--r-sm);background:var(--bg2);
-  box-shadow:-5px -5px 12px var(--neo-light), 6px 6px 16px var(--neo-dark);
-  transition:box-shadow .25s var(--spring),transform .25s var(--spring),color .25s ease;
+  padding:13px 22px;border-radius:var(--r-sm);background:var(--surface);
+  border:1px solid var(--glass-brd);
+  box-shadow:var(--btn-sh);
+  transition:box-shadow .25s var(--spring),transform .25s var(--spring),background .25s ease,color .25s ease;
 }
-.neo:hover{color:var(--glow);transform:translateY(-2px)}
-.neo:active{
-  transform:translateY(0);
-  box-shadow:inset -3px -3px 8px var(--neo-light), inset 4px 4px 10px var(--neo-dark);
-}
-.neo.primary{color:var(--glow)}
-.neo.ghost{background:transparent;box-shadow:none;border:1px solid var(--glass-brd)}
-.neo.ghost:hover{background:var(--glass)}
+.neo:hover{transform:translateY(-2px);box-shadow:var(--soft-sh-h)}
+.neo:active{transform:translateY(0);box-shadow:0 4px 10px rgba(15,61,71,.14)}
+/* primaire : aplat bleu pétrole, texte clair */
+.neo.primary{background:var(--ink);color:#eaf4f6;border-color:transparent}
+.neo.primary:hover{background:#0b333c;color:#fff}
+/* ghost : contour pétrole */
+.neo.ghost{background:transparent;box-shadow:none;border:1px solid var(--glass-brd);color:var(--ink)}
+.neo.ghost:hover{background:var(--bg2);box-shadow:none}
 
 /* ---------- pastilles (compétences / offres) ---------- */
 .pills{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
 .pill{
   padding:10px 18px;border-radius:999px;font-size:.88rem;font-weight:500;color:var(--ink);
-  background:var(--bg2);
-  box-shadow:-4px -4px 10px var(--neo-light), 5px 5px 12px var(--neo-dark);
-  transition:transform .25s var(--spring),color .25s ease;
+  background:var(--surface);border:1px solid var(--glass-brd);
+  box-shadow:var(--soft-sh);
+  transition:transform .25s var(--spring),color .25s ease,border-color .25s ease;
 }
-.pill:hover{transform:translateY(-3px);color:var(--glow)}
+.pill:hover{transform:translateY(-3px);border-color:var(--accent)}
 .pill.soft{color:var(--muted);font-style:italic}
-.pill .tag{font-size:.72rem;color:var(--glow);margin-right:6px;font-weight:600}
+.pill .tag{font-size:.72rem;color:var(--accent-ink);margin-right:6px;font-weight:600}
 
 /* offres : pastilles plus grandes, titre + une ligne */
 .offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:8px}
 .offer{
-  padding:22px;border-radius:var(--r-sm);background:var(--bg2);
-  box-shadow:-5px -5px 12px var(--neo-light), 6px 6px 16px var(--neo-dark);
-  transition:transform .3s var(--spring);
+  padding:22px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--glass-brd);
+  box-shadow:var(--soft-sh);
+  transition:transform .3s var(--spring),box-shadow .3s var(--spring);
 }
-.offer:hover{transform:translateY(-4px)}
+.offer:hover{transform:translateY(-4px);box-shadow:var(--soft-sh-h)}
 .offer h3{font-size:1.08rem;margin-bottom:6px}
 .offer p{color:var(--muted);font-size:.9rem}
 .offer .no{font-size:.8rem;color:var(--glow);font-weight:600;letter-spacing:.1em}
@@ -206,26 +165,26 @@ section{padding:clamp(56px,10vh,110px) 0}
 .media{
   position:relative;width:100%;aspect-ratio:16/10;
   background:
-    radial-gradient(130% 90% at 20% 0%,var(--glow-soft),transparent 52%),
-    linear-gradient(135deg,#e6e1d3,#d7d4c4 72%);
+    radial-gradient(130% 90% at 18% 0%,rgba(245,158,123,.22),transparent 52%),
+    linear-gradient(135deg,#143b45,#0F3D47 72%);
 }
 .card.feature .media{aspect-ratio:21/9}
 .card.third .media{aspect-ratio:4/3}
 .media .ph{
   position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;
-  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(38,39,31,.45);
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(234,244,246,.55);
 }
 /* média image / vidéo réels */
 .media img,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.media.has-media{background:#15130f}   /* cadre sombre : l'objet studio posé sur le drap */
-.media .glint{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 90% at 18% 0%,rgba(231,154,58,.16),transparent 52%)}
+.media.has-media{background:#0a1f24}   /* cadre sombre pétrole : objet/vidéo posé dessus */
+.media .glint{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 90% at 18% 0%,rgba(245,158,123,.18),transparent 52%)}
 .card-body{position:relative;z-index:2;padding:20px 22px 24px}
 .card-body h3{font-size:1.25rem;margin-bottom:6px}
 .card.feature .card-body h3{font-size:clamp(1.5rem,3.4vw,2.2rem)}
 .card-body .one{color:var(--muted);font-size:.92rem;max-width:52ch}
 .card-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
-.card-tags span{font-size:.72rem;padding:5px 11px;border-radius:999px;background:rgba(38,39,31,.045);border:1px solid var(--glass-brd);color:var(--muted)}
-.role{position:absolute;top:16px;left:16px;z-index:4;font-size:.72rem;font-weight:600;letter-spacing:.08em;padding:6px 12px;border-radius:999px;background:rgba(251,249,243,.85);border:1px solid var(--glass-brd);color:var(--glow);backdrop-filter:blur(8px)}
+.card-tags span{font-size:.72rem;padding:5px 11px;border-radius:999px;background:rgba(15,61,71,.05);border:1px solid var(--glass-brd);color:var(--muted)}
+.role{position:absolute;top:16px;left:16px;z-index:4;font-size:.72rem;font-weight:600;letter-spacing:.08em;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid var(--glass-brd);color:var(--accent-ink);backdrop-filter:blur(8px)}
 
 /* ---------- chiffres ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
@@ -237,37 +196,37 @@ section{padding:clamp(56px,10vh,110px) 0}
 .toile{position:relative;width:100%;height:clamp(480px,66vw,680px);margin-top:10px}
 @media(max-width:600px){.toile{height:clamp(540px,150vw,640px)}}
 .toile svg{position:absolute;inset:0;overflow:visible;pointer-events:none}
-.toile .edge{stroke:var(--stone);stroke-opacity:.5;stroke-width:1;transition:stroke-opacity .35s ease,stroke .35s ease,stroke-width .35s ease}
-/* couche intérieure (cœur ↔ compétences) : fil déjà plus chaud */
-.toile .edge.core-edge{stroke:var(--glow-bright);stroke-opacity:.5;stroke-width:1.3}
-.toile.lit .edge{stroke-opacity:.16}
-.toile .edge.hot{stroke:var(--glow);stroke-opacity:.95;stroke-width:1.8;filter:drop-shadow(0 0 4px var(--glow-soft))}
+.toile .edge{stroke:var(--ink);stroke-opacity:.26;stroke-width:1;transition:stroke-opacity .35s ease,stroke .35s ease,stroke-width .35s ease}
+/* couche intérieure (cœur ↔ compétences) : fil en accent peach */
+.toile .edge.core-edge{stroke:var(--accent);stroke-opacity:.6;stroke-width:1.3}
+.toile.lit .edge{stroke-opacity:.12}
+.toile .edge.hot{stroke:var(--accent-ink);stroke-opacity:.95;stroke-width:1.8;filter:drop-shadow(0 0 4px var(--accent-soft))}
 .tnode{
   position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;
   text-align:center;border-radius:999px;user-select:none;white-space:nowrap;
   transition:transform .35s var(--spring),opacity .35s ease,color .3s ease,box-shadow .35s ease,border-color .3s ease;
   will-change:transform;
 }
-/* intensité couche par couche : projet (pâle) → compétence (moyen) → cœur (fort) */
+/* intensité couche par couche en pétrole : projet (pâle) → compétence (moyen) → cœur (peach) */
 .tnode.skill{padding:11px 16px;font-size:.82rem;font-weight:600;color:var(--ink);
-  background:color-mix(in srgb, var(--glow-bright) 20%, var(--paper));
-  border:1px solid color-mix(in srgb, var(--glow-bright) 30%, var(--glass-brd));
-  box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark)}
-.tnode.project{padding:10px 15px;font-size:.8rem;font-weight:500;color:var(--muted);
-  background:color-mix(in srgb, var(--glow-bright) 7%, var(--paper));
+  background:color-mix(in srgb, var(--ink) 15%, var(--surface));
+  border:1px solid color-mix(in srgb, var(--ink) 25%, var(--glass-brd));
+  box-shadow:var(--soft-sh)}
+.tnode.project{padding:10px 15px;font-size:.8rem;font-weight:500;color:var(--ink);
+  background:color-mix(in srgb, var(--ink) 6%, var(--surface));
   border:1px solid var(--glass-brd);box-shadow:var(--soft-sh);cursor:pointer}
 .tnode.core{
-  width:154px;height:154px;flex-direction:column;gap:3px;padding:12px;line-height:1.05;color:#3a2405;
+  width:154px;height:154px;flex-direction:column;gap:3px;padding:12px;line-height:1.05;color:var(--ink);
   font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.05rem;
-  background:radial-gradient(circle at 38% 32%,#ffd891,var(--glow-bright));
-  box-shadow:0 0 50px -6px var(--glow-soft),0 10px 30px rgba(84,76,58,.2),inset 0 2px 7px rgba(255,255,255,.55);
+  background:radial-gradient(circle at 38% 32%,#ffc5ab,var(--accent));
+  box-shadow:0 0 48px -8px var(--accent-soft),0 12px 30px rgba(15,61,71,.18),inset 0 2px 7px rgba(255,255,255,.5);
   animation:corepulse 5.5s ease-in-out infinite;cursor:default;
 }
-.tnode.core small{font-weight:700;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
-@keyframes corepulse{0%,100%{box-shadow:0 0 40px -10px var(--glow-soft),0 10px 30px rgba(84,76,58,.2),inset 0 2px 7px rgba(255,255,255,.55)}50%{box-shadow:0 0 66px -6px var(--glow-soft),0 10px 30px rgba(84,76,58,.2),inset 0 2px 7px rgba(255,255,255,.55)}}
+.tnode.core small{font-weight:700;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+@keyframes corepulse{0%,100%{box-shadow:0 0 40px -10px var(--accent-soft),0 12px 30px rgba(15,61,71,.18),inset 0 2px 7px rgba(255,255,255,.5)}50%{box-shadow:0 0 64px -6px var(--accent-soft),0 12px 30px rgba(15,61,71,.18),inset 0 2px 7px rgba(255,255,255,.5)}}
 .toile.lit .tnode:not(.hot):not(.core){opacity:.3}
-.tnode.skill:hover,.tnode.hot.skill{color:var(--glow);transform:translate(-50%,-50%) scale(1.08);box-shadow:-4px -4px 10px var(--neo-light),5px 5px 12px var(--neo-dark),0 0 26px -4px var(--glow-soft)}
-.tnode.project:hover,.tnode.hot.project{color:var(--ink);border-color:var(--glow);transform:translate(-50%,-50%) scale(1.08)}
+.tnode.skill:hover,.tnode.hot.skill{color:var(--accent-ink);transform:translate(-50%,-50%) scale(1.08);box-shadow:var(--soft-sh-h)}
+.tnode.project:hover,.tnode.hot.project{color:var(--accent-ink);border-color:var(--accent);transform:translate(-50%,-50%) scale(1.08)}
 @media(max-width:720px){
   .tnode.core{width:120px;height:120px;font-size:.84rem}
   .tnode.skill{font-size:.72rem;padding:9px 12px}
@@ -289,13 +248,13 @@ section{padding:clamp(56px,10vh,110px) 0}
 .hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
 
 /* ---------- panneau détail projet (opaque) ---------- */
-.overlay{position:fixed;inset:0;z-index:60;background:rgba(60,55,44,.32);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s ease}
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(15,61,71,.28);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s ease}
 .overlay.open{opacity:1;pointer-events:auto}
 .panel{
   position:fixed;z-index:61;right:0;top:0;height:100%;width:min(460px,92vw);
   background:var(--paper);
   border-left:1px solid var(--glass-brd);
-  box-shadow:-30px 0 80px rgba(60,55,44,.28);
+  box-shadow:-30px 0 80px rgba(15,61,71,.22);
   transform:translateX(100%);transition:transform .45s var(--spring);
   padding:72px 32px 32px;overflow-y:auto;
 }
@@ -304,7 +263,7 @@ section{padding:clamp(56px,10vh,110px) 0}
 .panel .p-role{color:var(--glow);font-size:.82rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
 .panel .p-lines{margin-top:18px;color:var(--ink)}
 .panel .p-lines li{list-style:none;padding:9px 0;border-bottom:1px solid var(--glass-brd);color:var(--muted);font-size:.95rem}
-.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:20px;background:linear-gradient(135deg,#e6e1d3,#d7d4c4 72%)}
+.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:20px;background:linear-gradient(135deg,#143b45,#0F3D47 72%)}
 .panel .p-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .panel-close{
   position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;border:none;
@@ -355,48 +314,14 @@ footer .switch a:hover{color:var(--glow)}
   .panel{width:100vw;border-left:none}
 }
 
-/* ---------- sélecteur de thème (discret, en bas) ---------- */
-.theme-switch{
-  position:fixed;z-index:45;right:18px;bottom:18px;display:flex;gap:6px;align-items:center;
-  padding:7px;border-radius:999px;background:var(--paper);border:1px solid var(--glass-brd);
-  box-shadow:var(--soft-sh);
-}
-.theme-switch button{
-  width:26px;height:26px;border-radius:50%;border:1px solid var(--glass-brd);cursor:pointer;
-  padding:0;position:relative;transition:transform .25s var(--spring),box-shadow .25s ease;
-}
-.theme-switch button:hover{transform:scale(1.12)}
-.theme-switch button[data-t="drap"]{background:radial-gradient(circle at 35% 30%,#fbf9f3,#e3ddce)}
-.theme-switch button[data-t="aimant"]{background:radial-gradient(circle at 35% 30%,#ffffff,#eef0f2)}
-.theme-switch button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--glow-bright)}
-.theme-switch button[aria-pressed="true"]::after{
-  content:"";position:absolute;inset:0;margin:auto;width:7px;height:7px;border-radius:50%;background:var(--glow-bright)
-}
-@media(max-width:560px){.theme-switch{right:12px;bottom:12px}}
-
 /* ---------- accessibilité : mouvement réduit ---------- */
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .card{opacity:1;translate:0 0}
-  .cursor-glow{display:none}
 }
 </style>
 </head>
 <body>
-
-<!-- décor drap (thème 1) -->
-<div class="liquid" aria-hidden="true">
-  <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
-</div>
-<!-- fluides magnétiques gris (thème 2) -->
-<canvas class="flow" id="flow" aria-hidden="true"></canvas>
-<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-
-<!-- sélecteur de thème -->
-<div class="theme-switch" id="themeSwitch" role="group" aria-label="Thème">
-  <button type="button" data-t="aimant" title="Thème aimant (blanc, fleuve d'hexagones)" aria-label="Thème aimant" aria-pressed="true"></button>
-  <button type="button" data-t="drap" title="Thème drap (lin clair)" aria-label="Thème drap" aria-pressed="false"></button>
-</div>
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav" aria-label="Navigation principale">
@@ -798,12 +723,6 @@ if(!reduce){
     const card=e.target.closest(".card");
     if(card && !card.contains(e.relatedTarget)) card.style.transform="";
   });
-
-  // point lumineux qui suit le curseur
-  const glow=document.getElementById("cursorGlow");
-  let gx=innerWidth/2,gy=innerHeight/2,cx=gx,cy=gy;
-  document.addEventListener("mousemove",e=>{gx=e.clientX;gy=e.clientY;glow.style.opacity=.9;},{passive:true});
-  (function loop(){ cx+=(gx-cx)*.08; cy+=(gy-cy)*.08; glow.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); })();
 }
 
 /* =====================================================================
@@ -1021,141 +940,6 @@ function gradePills(){
   });
 }
 
-/* =====================================================================
-   THÈME — drap (défaut) / aimant ; mémorisé
-   ===================================================================== */
-const THEMES=["drap","aimant"];
-function applyTheme(t){
-  if(!THEMES.includes(t)) t="drap";
-  document.documentElement.setAttribute("data-theme",t);
-  document.querySelectorAll("#themeSwitch button").forEach(b=>{
-    b.setAttribute("aria-pressed", b.dataset.t===t ? "true":"false");
-  });
-  try{ localStorage.setItem("portfolio-theme",t); }catch(e){}
-  if(t==="aimant") startFlow(); else stopFlow();
-}
-document.getElementById("themeSwitch").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-t]"); if(b) applyTheme(b.dataset.t);
-});
-
-/* =====================================================================
-   FLUIDES MAGNÉTIQUES — champ de flux de particules grises (thème aimant)
-   Lignes grises qui traversent la page ; quelques points dorés précis.
-   ===================================================================== */
-let flowRAF=null, flowHex=[], flowCtx=null, flowW=0, flowH=0, flowClock=0;
-const flowCanvas=document.getElementById("flow");
-function flowResize(){
-  if(!flowCanvas) return;
-  const dpr=Math.min(window.devicePixelRatio||1, 2);
-  flowW=flowCanvas.clientWidth; flowH=flowCanvas.clientHeight;
-  flowCanvas.width=flowW*dpr; flowCanvas.height=flowH*dpr;
-  flowCtx=flowCanvas.getContext("2d"); flowCtx.setTransform(dpr,0,0,dpr,0,0);
-}
-// ===== Fluide vertical qui remonte (bas → haut) avec plusieurs affluents =====
-// Des affluents partent du bas, méandrent, puis convergent vers un tronc
-// central en remontant. Texture dense d'hexagones gris, un peu sombre.
-let flowTribs=[];
-function easeIO(t){ return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
-function flowSeed(){
-  flowHex=[]; flowTribs=[];
-  const nT=7;
-  const splitIdx=3;               // un affluent monte droit au centre → coupe l'écran en deux
-  for(let i=0;i<nT;i++){
-    const isSplit=(i===splitIdx);
-    const a1 = isSplit ? 12 : 30 + Math.random()*42;
-    flowTribs.push({
-      xStart: isSplit ? flowW*0.5 : flowW*(0.04 + 0.92*(i/(nT-1))),
-      // tronc « tressé » autour de 0,67 (reste bien à l'écran) ; central à 0,5
-      trunk:  isSplit ? flowW*0.5 : flowW*(0.60 + Math.random()*0.14),
-      conv:   isSplit ? 0.45 : 0.42 + Math.random()*0.30,
-      // méandre irrégulier : 3 harmoniques
-      a1, a2:a1*(0.35+Math.random()*0.3), a3:a1*(0.15+Math.random()*0.2),
-      f1:1.2+Math.random()*1.3, f2:2.3+Math.random()*1.8, f3:3.6+Math.random()*2.4,
-      p1:Math.random()*6.283, p2:Math.random()*6.283, p3:Math.random()*6.283,
-      // largeur de canal variable (plus grande) + fréquence de pulsation
-      baseHalf: isSplit ? flowW*0.028 : flowW*(0.035+Math.random()*0.03),
-      wf:1.6+Math.random()*3, wp:Math.random()*6.283,
-      drift:(Math.random()*2-1)*0.00012               // dérive lente
-    });
-  }
-  const per=100;                  // densité
-  flowTribs.forEach((T,ti)=>{
-    for(let i=0;i<per;i++){
-      flowHex.push({ti, s:Math.random(), off:(Math.random()*2-1)*(0.6+Math.random()*0.4),
-        r:4+Math.random()*20,                          // plus grands, tailles variées
-        rot:Math.random()*Math.PI, vr:(Math.random()*2-1)*0.008,
-        ds:0.0006+Math.random()*0.0011,                // montée lente
-        gold:Math.random()<0.05,
-        a:0.24+Math.random()*0.34});                   // sombre
-    }
-  });
-}
-function hexPath(cx,cy,r,rot){
-  flowCtx.beginPath();
-  for(let i=0;i<6;i++){ const an=rot + i*Math.PI/3;
-    const px=cx+Math.cos(an)*r, py=cy+Math.sin(an)*r;
-    i?flowCtx.lineTo(px,py):flowCtx.moveTo(px,py); }
-  flowCtx.closePath();
-}
-// largeur (demi) irrégulière du canal à la hauteur s
-function chanHalf(T,s){
-  return T.baseHalf * (0.5 + 0.9*(0.5+0.5*Math.sin(s*T.wf*6.283 + T.wp)));
-}
-// x du canal d'un affluent à la hauteur s (0 = bas, 1 = haut) — méandre irrégulier
-function channelX(T,s,t){
-  const e=easeIO(Math.min(1, s/T.conv));
-  const baseX=T.xStart + (T.trunk-T.xStart)*e;
-  const m=(1-e)*( T.a1*Math.sin(s*T.f1*6.283 + T.p1 + t*T.drift)
-                + T.a2*Math.sin(s*T.f2*6.283 + T.p2 - t*T.drift*1.7)
-                + T.a3*Math.sin(s*T.f3*6.283 + T.p3) );
-  const trunkWob = e * 16 * Math.sin(s*3.1 + T.p2 + t*T.drift); // le tronc ondule encore un peu
-  return baseX + m + trunkWob;
-}
-function flowDraw(animate){
-  flowCtx.clearRect(0,0,flowW,flowH);
-  // corps du fluide : ruban à largeur irrégulière ; recouvrements → tronc plus sombre
-  for(const T of flowTribs){
-    flowCtx.beginPath();
-    for(let s=0;s<=1.0001;s+=0.025){ const x=channelX(T,s,flowClock)+chanHalf(T,s), y=flowH*(1-s); s===0?flowCtx.moveTo(x,y):flowCtx.lineTo(x,y); }
-    for(let s=1;s>=-0.0001;s-=0.025){ const x=channelX(T,s,flowClock)-chanHalf(T,s), y=flowH*(1-s); flowCtx.lineTo(x,y); }
-    flowCtx.closePath();
-    flowCtx.fillStyle="rgba(50,56,68,0.05)"; flowCtx.fill();
-  }
-  // hexagones (texture du fluide) qui remontent
-  for(const h of flowHex){
-    const T=flowTribs[h.ti];
-    if(animate){ h.s+=h.ds; h.rot+=h.vr; if(h.s>1){ h.s=0; h.off=(Math.random()*2-1)*(0.6+Math.random()*0.4); } }
-    const cx=channelX(T,h.s,flowClock)+h.off*chanHalf(T,h.s);
-    const cy=flowH*(1-h.s);
-    hexPath(cx,cy,h.r,h.rot);
-    if(h.gold){
-      flowCtx.fillStyle="rgba(240,160,40,0.18)"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(214,138,26,0.9)"; flowCtx.lineWidth=1.1; flowCtx.stroke();
-    }else{
-      flowCtx.fillStyle="rgba(40,46,58,"+(h.a*0.55)+")"; flowCtx.fill();
-      flowCtx.strokeStyle="rgba(32,38,50,"+h.a+")"; flowCtx.lineWidth=1; flowCtx.stroke();
-    }
-  }
-  if(animate) flowClock+=16;
-}
-function flowStep(){ if(!flowCtx){ flowRAF=null; return; } flowDraw(true); flowRAF=requestAnimationFrame(flowStep); }
-function startFlow(){
-  if(!flowCanvas) return;
-  flowResize(); flowSeed();
-  if(reduce){ flowDraw(false); return; }       // mouvement réduit : lignes figées
-  if(flowRAF) return;
-  flowRAF=requestAnimationFrame(flowStep);
-}
-function stopFlow(){
-  if(flowRAF){ cancelAnimationFrame(flowRAF); flowRAF=null; }
-  if(flowCtx) flowCtx.clearRect(0,0,flowW,flowH);
-}
-window.addEventListener("resize",()=>{ if(flowRAF){ flowResize(); flowSeed(); } },{passive:true});
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden) stopFlow();
-  else if(document.documentElement.getAttribute("data-theme")==="aimant") startFlow();
-});
-
 /* init */
 document.getElementById("year").textContent=new Date().getFullYear();
 buildContacts();
@@ -1163,10 +947,6 @@ buildToile();
 gradePills();
 render();
 onScroll();
-(function initTheme(){
-  let t="aimant"; try{ t=localStorage.getItem("portfolio-theme")||"aimant"; }catch(e){}
-  applyTheme(t);
-})();
 </script>
 </body>
 </html>
