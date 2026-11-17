@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://clement-agbalenyo.vercel.app/sitemap.xml
