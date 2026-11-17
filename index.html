@@ -320,7 +320,12 @@ section{padding:clamp(56px,10vh,110px) 0}
 .panel .p-role{color:var(--glow);font-size:.82rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
 .panel .p-lines{margin-top:18px;color:var(--ink)}
 .panel .p-lines li{list-style:none;padding:9px 0;border-bottom:1px solid var(--glass-brd);color:var(--muted);font-size:.95rem}
-.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:20px;background:linear-gradient(135deg,#143b45,#0F3D47 72%)}
+.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:12px;background:linear-gradient(135deg,#143b45,#0F3D47 72%);background-size:cover;background-position:center}
+.panel .p-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.panel .p-thumbs:empty{display:none}
+.panel .p-thumbs button{width:66px;height:48px;padding:0;border-radius:10px;cursor:pointer;border:1px solid var(--glass-brd);background-size:cover;background-position:center;opacity:.65;transition:opacity .2s ease,border-color .2s ease,transform .2s var(--spring)}
+.panel .p-thumbs button:hover{opacity:1;transform:translateY(-2px)}
+.panel .p-thumbs button.active{opacity:1;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .panel .p-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .panel-close{
   position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;border:none;
@@ -492,6 +497,7 @@ footer .switch a:hover{color:var(--glow)}
   <p class="p-role" id="p-role"></p>
   <h2 id="p-title"></h2>
   <div class="p-media" id="p-media"></div>
+  <div class="p-thumbs" id="p-thumbs"></div>
   <ul class="p-lines" id="p-lines"></ul>
   <div class="p-links" id="p-links"></div>
 </aside>
@@ -526,12 +532,12 @@ const PROJECTS = {
     "Coordination de l'équipe projet.",
     "Prototype fonctionnel.",
   ],links:[]},
-  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:"assets/proj-relax.jpg",lines:[
+  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg"],lines:[
     "Gilet de relaxation à 12 moteurs pilotés.",
     "Carte ESP32 et application Flutter.",
     "Séquences de vibration paramétrables.",
   ],links:[]},
-  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",media:"assets/proj-cnc.jpg",lines:[
+  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",media:["assets/proj-cnc.jpg","assets/proj-cnc-sim.jpg"],lines:[
     "Diagnostic complet de la machine.",
     "Réparation mécanique et électronique.",
     "Retour à la production.",
@@ -653,8 +659,21 @@ function openPanel(key){
   document.getElementById("p-role").textContent=p.role||"";
   document.getElementById("p-title").textContent=p.title||"";
   const pm=document.getElementById("p-media");
-  if(p.media){ pm.style.backgroundImage=`url("${p.media}")`; pm.style.backgroundSize="cover"; pm.style.backgroundPosition="center"; }
-  else { pm.style.backgroundImage=""; }
+  const thumbs=document.getElementById("p-thumbs");
+  const medias = Array.isArray(p.media) ? p.media : (p.media ? [p.media] : []);
+  const showMain=(src)=>{ pm.style.backgroundImage=`url("${src}")`; pm.style.backgroundSize="cover"; pm.style.backgroundPosition="center"; };
+  thumbs.innerHTML="";
+  if(medias.length){ showMain(medias[0]); } else { pm.style.backgroundImage=""; }
+  if(medias.length>1){
+    medias.forEach((src,i)=>{
+      const btn=document.createElement("button");
+      btn.type="button"; btn.style.backgroundImage=`url("${src}")`;
+      btn.setAttribute("aria-label","Voir l'image "+(i+1));
+      if(i===0) btn.classList.add("active");
+      btn.addEventListener("click",()=>{ showMain(src); [...thumbs.children].forEach(c=>c.classList.remove("active")); btn.classList.add("active"); });
+      thumbs.appendChild(btn);
+    });
+  }
   const ul=document.getElementById("p-lines"); ul.innerHTML="";
   (p.lines||[]).slice(0,5).forEach(l=>{const li=document.createElement("li");li.textContent=l;ul.appendChild(li);});
   const lk=document.getElementById("p-links"); lk.innerHTML="";
