@@ -326,24 +326,34 @@ section{padding:clamp(56px,10vh,110px) 0}
 .panel .p-thumbs button{width:66px;height:48px;padding:0;border-radius:10px;cursor:pointer;border:1px solid var(--glass-brd);background-size:cover;background-position:center;opacity:.65;transition:opacity .2s ease,border-color .2s ease,transform .2s var(--spring)}
 .panel .p-thumbs button:hover{opacity:1;transform:translateY(-2px)}
 .panel .p-thumbs button.active{opacity:1;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-/* ---- carte mentale d'explication (dans le panneau) ---- */
-.panel .p-mind{position:relative;margin:18px 0 8px}
+/* ---- carte mentale radiale, interactive, dépliable ---- */
+.panel .p-mind{position:relative;width:100%;aspect-ratio:1/1;max-height:600px;margin:14px auto 2px}
 .panel .p-mind:empty{display:none}
-.p-mind .mm-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
-.p-mind .mm-links line{stroke:var(--ink);stroke-opacity:.22;stroke-width:1.2}
-.p-mind .mm-links line.root{stroke:var(--accent);stroke-opacity:.6;stroke-width:1.6}
-.p-mind .mm-root{position:relative;z-index:1;width:max-content;max-width:100%;margin:0 auto 20px;
-  padding:12px 20px;border-radius:16px;text-align:center;color:var(--ink);font-weight:700;
-  font-family:'Bricolage Grotesque',sans-serif;line-height:1.1;
-  background:radial-gradient(circle at 35% 30%,#ffc5ab,var(--accent));box-shadow:0 10px 26px rgba(15,61,71,.18)}
-.p-mind .mm-root small{display:block;font-family:'Inter',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
-.p-mind .mm-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 16px}
-@media(max-width:520px){.p-mind .mm-grid{grid-template-columns:1fr}}
-.p-mind .mm-branch{display:flex;flex-direction:column;align-items:center;gap:9px}
-.p-mind .mm-cat{padding:8px 15px;border-radius:999px;font-size:.8rem;font-weight:700;color:#eaf4f6;
-  background:var(--ink);box-shadow:0 6px 16px rgba(15,61,71,.18)}
-.p-mind .mm-leaf{padding:7px 13px;border-radius:12px;font-size:.78rem;line-height:1.25;text-align:center;color:var(--ink);
-  background:color-mix(in srgb, var(--ink) 7%, var(--surface));border:1px solid var(--glass-brd);max-width:96%}
+.p-mind svg.mm-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.p-mind svg.mm-links line{stroke:var(--ink);stroke-opacity:.16;stroke-width:1.2;transition:stroke .3s ease,stroke-opacity .3s ease,stroke-width .3s ease}
+.p-mind svg.mm-links line.hot{stroke:var(--accent);stroke-opacity:.95;stroke-width:1.8}
+.p-mind .mm-node{position:absolute;transform:translate(-50%,-50%);transition:transform .4s var(--spring),opacity .3s ease,box-shadow .3s ease,background .3s ease,color .3s ease;z-index:1;will-change:transform}
+.p-mind .mm-core{width:126px;height:126px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;cursor:pointer;padding:8px;
+  color:var(--ink);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1rem;line-height:1.04;
+  background:radial-gradient(circle at 36% 32%,#ffc5ab,var(--accent));box-shadow:0 0 42px -8px var(--accent-soft),0 10px 26px rgba(15,61,71,.2);animation:corepulse 5.5s ease-in-out infinite}
+.p-mind .mm-core small{font-family:'Inter',sans-serif;font-weight:700;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;opacity:.72}
+.p-mind .mm-cat{padding:9px 15px;border-radius:999px;font-size:.8rem;font-weight:700;color:#eaf4f6;background:var(--ink);cursor:pointer;white-space:nowrap;box-shadow:0 6px 16px rgba(15,61,71,.2)}
+.p-mind .mm-cat .chev{display:inline-block;margin-left:7px;opacity:.7;transition:transform .35s var(--spring)}
+.p-mind .mm-cat.on{background:var(--accent);color:#3a2405;box-shadow:0 0 0 2px var(--accent-soft),0 8px 20px rgba(15,61,71,.25)}
+.p-mind .mm-cat.on .chev{transform:rotate(90deg);opacity:1}
+.p-mind .mm-cat:hover{transform:translate(-50%,-50%) scale(1.06)}
+.p-mind.active .mm-cat:not(.on){opacity:.32}
+.p-mind .mm-leaf{padding:6px 9px;border-radius:12px;font-size:.7rem;line-height:1.18;text-align:center;color:var(--ink);white-space:normal;width:104px;
+  background:var(--surface);border:1px solid var(--glass-brd);box-shadow:var(--soft-sh);
+  opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.55)}
+.p-mind .mm-leaf.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.p-mind .mm-hint{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-size:.72rem;color:var(--muted);z-index:1;transition:opacity .3s ease}
+.p-mind.active .mm-hint{opacity:0}
+@media(max-width:520px){
+  .p-mind .mm-core{width:104px;height:104px;font-size:.84rem}
+  .p-mind .mm-cat{font-size:.72rem;padding:8px 12px}
+  .p-mind .mm-leaf{font-size:.66rem;width:92px}
+}
 .panel .p-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .panel-close{
   position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;border:none;
@@ -543,10 +553,10 @@ const PROJECTS = {
   apis:{role:"Projet phare",title:"APIS — robot autonome",media:"assets/apis-hero.jpg",
     mindTitle:"APIS",
     detail:{
-      "Conception":["CAO paramétrique par code (CadQuery / OpenCascade)","Cotes dans un dictionnaire — tout se régénère","Ø60 × 35 mm, 27 corps nommés"],
-      "Choix (logique)":["Voie 75 mm mesurée hors-tout","Roue 6,5 mm → 1 mm de jeu avec la coque","Moteurs N20 (seuls à tenir dans Ø56)","Li-Po 502030 (seul format qui passe)"],
-      "Tests":["Détection d'interférences","Jeux vérifiés (roue-coque 1,0 mm…)","Masse par volume × densité","Centre de gravité calculé"],
-      "Résultats":["Masse ≈ 86,5 g","CG 1,4 mm derrière l'axe → stable","Bascule si freinage > 0,75 m/s²"]
+      "Conception":["CAO paramétrique par code (CadQuery)","Cotes dans un dictionnaire — tout se régénère","Ø60 × 35 mm, 27 corps"],
+      "Choix":["Voie 75 mm hors-tout","Roue 6,5 mm → 1 mm de jeu","Moteurs N20 (tiennent dans Ø56)"],
+      "Tests":["Détection d'interférences","Jeux vérifiés","Masse & centre de gravité calculés"],
+      "Résultats":["Masse ≈ 86,5 g","CG derrière l'axe → stable","Bascule si freinage > 0,75 m/s²"]
     },lines:[
     "Robot Ø60 mm conçu en CAO paramétrique par code (CadQuery / OpenCascade).",
     "Vérification simulée : interférences, jeux, masse ≈ 86,5 g, centre de gravité, basculement.",
@@ -554,25 +564,42 @@ const PROJECTS = {
   bras:{role:"Chef de projet",title:"Bras robotique « NESSO »",media:["assets/proj-bras.jpg","assets/proj-nesso-app1.jpg","assets/proj-nesso-app2.jpg","assets/proj-nesso-app3.jpg"],
     mindTitle:"NESSO",
     detail:{
-      "Architecture":["Arduino Mega — 7 servos + sécurité","ESP32 — point d'accès WiFi + WebSocket","Serveur Python FastAPI","App Flutter + jumeau 3D"],
-      "Choix (logique)":["Firmware unique (flag base fixe / mobile)","4× MG995 (force) + 3× MG90S (précision)","Protocole JSON ligne par ligne"],
-      "Intelligence":["Vision YOLOv8 — détection d'objet","Commande vocale Whisper (FR)","Cinématique inverse (scipy)"],
-      "Sécurité / Tests":["Priorité Python > App (verrou 5 s)","Watchdog matériel","Pick & place automatique"]
+      "Architecture":["Arduino Mega — 7 servos + sécurité","ESP32 — WiFi + WebSocket","Serveur Python FastAPI","App Flutter + jumeau 3D"],
+      "Choix":["Firmware unique (base fixe / mobile)","4× MG995 (force) + 3× MG90S","Protocole JSON ligne par ligne"],
+      "Intelligence":["Vision YOLOv8 (détection objet)","Commande vocale Whisper (FR)","Cinématique inverse (scipy)"],
+      "Sécurité":["Priorité Python > App (verrou 5 s)","Watchdog matériel","Pick & place automatique"]
     },lines:[
     "Bras 5 DOF (base mobile ou fixe) avec caméra.",
     "App Flutter de contrôle : joystick, commande vocale, mode auto par vision.",
   ],links:[]},
-  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg","assets/proj-relax-app2.jpg","assets/proj-relax-app3.jpg"],lines:[
+  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg","assets/proj-relax-app2.jpg","assets/proj-relax-app3.jpg"],
+    detail:{
+      "Matériel":["Carte ESP32","12 moteurs de vibration","Boîtier imprimé 3D + batterie"],
+      "App":["Flutter (Android)","Modes : intensité, durée","Distribuée via Firebase"],
+      "Logique":["Séquences haptiques paramétrables","Contrôle tactile par zones","Rappels séance & batterie"],
+      "Usage":["Détente / relaxation","Séances enregistrées","Retour haptique"]
+    },lines:[
     "Gilet de relaxation à 12 moteurs pilotés.",
     "Carte ESP32 et application Flutter.",
-    "Séquences de vibration paramétrables.",
   ],links:[]},
-  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",media:["assets/proj-cnc.jpg","assets/proj-cnc-sim.jpg"],lines:[
+  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",media:["assets/proj-cnc.jpg","assets/proj-cnc-sim.jpg"],
+    mindTitle:"Tour CNC",
+    detail:{
+      "Diagnostic":["Lecture des alarmes (ALM510, G18…)","Contrôle pupitre & axes","Mesure des pièces (métrologie)"],
+      "Remise en état":["Réparation mécanique","Réparation électronique","Retour à la production"],
+      "Outil créé":["Simulateur de tour (GSK980TB3)","Vérif du G-code avant usinage","Vue 2D/3D, alarmes simulées"],
+      "Résultats":["Machine remise en service","Programmes validés avant copeaux","Moins de risques de collision"]
+    },lines:[
     "Diagnostic complet de la machine.",
     "Réparation mécanique et électronique.",
-    "Retour à la production.",
   ],links:[]},
-  esig:{role:"Développement web",title:"Application web de l'atelier ESIG",media:"assets/proj-esig.jpg",lines:[
+  esig:{role:"Développement web",title:"Application web de l'atelier ESIG",media:"assets/proj-esig.jpg",
+    mindTitle:"ESIG Atelier",
+    detail:{
+      "But":["Gérer l'atelier universitaire","TP, machines, inventaire"],
+      "Conception":["Application web","Authentification + mode visiteur","Base de données"],
+      "Fonctions":["Suivi des machines","Inventaire du stock","Tableaux de bord"]
+    },lines:[
     "Outil numérique pour la gestion de l'atelier.",
     "Interface web dédiée aux usages réels.",
   ],links:[]},
@@ -718,41 +745,86 @@ function openPanel(key){
   if(p.detail) requestAnimationFrame(()=>requestAnimationFrame(layoutMind));
   document.getElementById("panelClose").focus();
 }
-/* ---- carte mentale : construit les nœuds puis trace les liens mesurés ---- */
+/* ---- carte mentale RADIALE, interactive, dépliable ---- */
 let mindBoxRef=null;
 function buildMind(box, detail, title){
-  mindBoxRef=box;
-  box.innerHTML="";
+  mindBoxRef=box; box.innerHTML="";
   const svgNS="http://www.w3.org/2000/svg";
-  const svg=document.createElementNS(svgNS,"svg"); svg.setAttribute("class","mm-links"); box.appendChild(svg);
-  const root=document.createElement("div"); root.className="mm-root";
-  root.innerHTML='<small>Comment c\'est conçu</small>'+ (title||"Projet"); box.appendChild(root); box._root=root;
-  const grid=document.createElement("div"); grid.className="mm-grid"; box.appendChild(grid);
-  box._branches=[];
-  Object.keys(detail).forEach(cat=>{
-    const br=document.createElement("div"); br.className="mm-branch";
-    const c=document.createElement("div"); c.className="mm-cat"; c.textContent=cat; br.appendChild(c);
-    const leaves=[];
-    (detail[cat]||[]).forEach(txt=>{ const lf=document.createElement("div"); lf.className="mm-leaf"; lf.textContent=txt; br.appendChild(lf); leaves.push(lf); });
-    grid.appendChild(br); box._branches.push({cat:c, leaves});
+  const svg=document.createElementNS(svgNS,"svg"); svg.setAttribute("class","mm-links"); box.appendChild(svg); box._svg=svg;
+  // cœur
+  const core=document.createElement("div"); core.className="mm-node mm-core";
+  core.innerHTML='<small>Comment c\'est conçu</small>'+(title||"Projet"); box.appendChild(core); box._core=core;
+  // branches (catégories) + feuilles (max 3 pour la lisibilité)
+  box._cats=[];
+  Object.keys(detail).forEach((cat,ci)=>{
+    const c=document.createElement("div"); c.className="mm-node mm-cat";
+    c.innerHTML=cat+'<span class="chev">›</span>'; box.appendChild(c);
+    const leaves=(detail[cat]||[]).slice(0,3).map(txt=>{
+      const lf=document.createElement("div"); lf.className="mm-node mm-leaf"; lf.textContent=txt; box.appendChild(lf); return lf;
+    });
+    const entry={el:c, leaves, idx:ci};
+    c.addEventListener("click",(e)=>{ e.stopPropagation(); toggleBranch(ci); });
+    box._cats.push(entry);
   });
-  box._svg=svg;
+  core.addEventListener("click",()=>collapseMind());
+  const hint=document.createElement("div"); hint.className="mm-hint"; hint.textContent="Touchez une branche pour la déplier"; box.appendChild(hint);
+  box._active=-1;
 }
+function place(el,x,y){ el.style.left=x+"px"; el.style.top=y+"px"; el._x=x; el._y=y; }
 function layoutMind(){
   const box=mindBoxRef; if(!box||!box._svg||!box.isConnected) return;
-  const svg=box._svg, R=box.getBoundingClientRect();
-  if(!R.width) return;
-  svg.setAttribute("width",R.width); svg.setAttribute("height",R.height); svg.setAttribute("viewBox","0 0 "+R.width+" "+R.height);
-  while(svg.firstChild) svg.removeChild(svg.firstChild);
-  const ctr=(el)=>{ const r=el.getBoundingClientRect(); return {x:r.left-R.left+r.width/2, y:r.top-R.top+r.height/2, top:r.top-R.top, bot:r.bottom-R.top}; };
-  const line=(x1,y1,x2,y2,cls)=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line");
-    l.setAttribute("x1",x1);l.setAttribute("y1",y1);l.setAttribute("x2",x2);l.setAttribute("y2",y2); if(cls)l.setAttribute("class",cls); svg.appendChild(l); };
-  const rt=ctr(box._root);
-  (box._branches||[]).forEach(b=>{
-    const c=ctr(b.cat);
-    line(rt.x, rt.bot, c.x, c.top, "root");
-    b.leaves.forEach(lf=>{ const p=ctr(lf); line(c.x, c.bot, p.x, p.top); });
+  const R=box.getBoundingClientRect(); const W=R.width, H=R.height; if(!W) return;
+  const svg=box._svg; svg.setAttribute("width",W); svg.setAttribute("height",H); svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const size=Math.min(W,H), cx=W/2, cy=H/2, narrow=W<520;
+  place(box._core,cx,cy);
+  const n=box._cats.length;
+  const catR=size*(narrow?0.26:0.23);
+  const leafR=size*(narrow?0.36:0.35);
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+  box._cats.forEach((b,i)=>{
+    const a=-Math.PI/2 + i*2*Math.PI/n;
+    b.angle=a;
+    place(b.el, cx+catR*Math.cos(a), cy+catR*Math.sin(a));
+    const k=b.leaves.length;
+    const spread=(Math.min(104, 36*k))*Math.PI/180;
+    b.leaves.forEach((lf,j)=>{
+      const off = k>1 ? (-spread/2 + j*spread/(k-1)) : 0;
+      // feuille proche de l'axe de la branche = poussée plus loin (évite le chevauchement)
+      const stag = 1 + 0.18*(1 - Math.min(1, Math.abs(off)/((spread/2)||1)));
+      const la=a+off, r=leafR*stag;
+      place(lf, clamp(cx+r*Math.cos(la), 56, W-56), clamp(cy+r*Math.sin(la), 40, H-40));
+    });
   });
+  drawMindLinks();
+}
+function nodeCenter(el){ return {x:el._x, y:el._y}; }
+function drawMindLinks(){
+  const box=mindBoxRef; if(!box) return; const svg=box._svg;
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const mk=(A,B,hot)=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",A.x);l.setAttribute("y1",A.y);l.setAttribute("x2",B.x);l.setAttribute("y2",B.y); if(hot)l.setAttribute("class","hot"); svg.appendChild(l); };
+  const core=nodeCenter(box._core);
+  box._cats.forEach(b=>{
+    const on=b.el.classList.contains("on");
+    mk(core, nodeCenter(b.el), on);
+    if(on) b.leaves.forEach(lf=>mk(nodeCenter(b.el), nodeCenter(lf), true));
+  });
+}
+function toggleBranch(i){
+  const box=mindBoxRef; if(!box) return;
+  if(box._active===i){ collapseMind(); return; }
+  box._active=i; box.classList.add("active");
+  box._cats.forEach((b,bi)=>{
+    const on=bi===i; b.el.classList.toggle("on",on);
+    b.leaves.forEach(lf=>lf.classList.toggle("show",on));
+  });
+  drawMindLinks();
+}
+function collapseMind(){
+  const box=mindBoxRef; if(!box) return;
+  box._active=-1; box.classList.remove("active");
+  box._cats.forEach(b=>{ b.el.classList.remove("on"); b.leaves.forEach(lf=>lf.classList.remove("show")); });
+  drawMindLinks();
 }
 window.addEventListener("resize",()=>{ if(panel.classList.contains("open")) requestAnimationFrame(layoutMind); },{passive:true});
 function closePanel(){
