@@ -429,17 +429,17 @@ footer .switch a:hover{color:var(--glow)}
     <div class="grid">
       <article class="card" data-project="bras">
         <span class="role">Chef de projet</span>
-        <div class="media"><span class="ph">Bras robotique</span></div>
+        <div class="media has-media"><img src="assets/proj-bras.jpg" alt="Bras robotique assemblé avec l'équipe" loading="lazy"><span class="glint"></span></div>
         <div class="card-body"><h3>Bras robotique</h3><p class="one">Conception et coordination d'équipe.</p>
           <div class="card-tags"><span>Robotique</span><span>Gestion de projet</span></div></div>
       </article>
       <article class="card" data-project="relaxvest">
-        <div class="media"><span class="ph">RelaxVest</span></div>
+        <div class="media has-media"><img src="assets/proj-relax.jpg" alt="Montage électronique du gilet RelaxVest (ESP32)" loading="lazy"><span class="glint"></span></div>
         <div class="card-body"><h3>RelaxVest</h3><p class="one">Gilet de relaxation : 12 moteurs pilotés, ESP32 et app Flutter.</p>
           <div class="card-tags"><span>ESP32</span><span>Flutter</span><span>12 moteurs</span></div></div>
       </article>
       <article class="card" data-project="cnc">
-        <div class="media"><span class="ph">Tour CNC</span></div>
+        <div class="media has-media"><img src="assets/proj-cnc.jpg" alt="Intervention sur un tour CNC avec l'équipe" loading="lazy"><span class="glint"></span></div>
         <div class="card-body"><h3>Remise en service d'un tour CNC</h3><p class="one">Diagnostic, réparation et retour à la production.</p>
           <div class="card-tags"><span>CNC</span><span>Maintenance</span></div></div>
       </article>
@@ -521,17 +521,17 @@ const PROJECTS = {
     "Électronique embarquée, marqueur ArUco, capteurs de distance.",
     "IA de trajectoire et de rôles (3 étapes), rendu 3D et pub.",
   ],links:[]},
-  bras:{role:"Chef de projet",title:"Bras robotique",lines:[
+  bras:{role:"Chef de projet",title:"Bras robotique",media:"assets/proj-bras.jpg",lines:[
     "Conception mécanique et choix des actionneurs.",
     "Coordination de l'équipe projet.",
     "Prototype fonctionnel.",
   ],links:[]},
-  relaxvest:{role:"Mécatronique",title:"RelaxVest",lines:[
+  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:"assets/proj-relax.jpg",lines:[
     "Gilet de relaxation à 12 moteurs pilotés.",
     "Carte ESP32 et application Flutter.",
     "Séquences de vibration paramétrables.",
   ],links:[]},
-  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",lines:[
+  cnc:{role:"Maintenance",title:"Remise en service d'un tour CNC",media:"assets/proj-cnc.jpg",lines:[
     "Diagnostic complet de la machine.",
     "Réparation mécanique et électronique.",
     "Retour à la production.",
