@@ -320,7 +320,7 @@ section{padding:clamp(56px,10vh,110px) 0}
 .panel .p-role{color:var(--glow);font-size:.82rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
 .panel .p-lines{margin-top:18px;color:var(--ink)}
 .panel .p-lines li{list-style:none;padding:9px 0;border-bottom:1px solid var(--glass-brd);color:var(--muted);font-size:.95rem}
-.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:12px;background:linear-gradient(135deg,#143b45,#0F3D47 72%);background-size:cover;background-position:center}
+.panel .p-media{width:100%;aspect-ratio:16/10;border-radius:var(--r-sm);margin-bottom:12px;background-color:#0e2a31;background-image:linear-gradient(135deg,#143b45,#0F3D47 72%);background-size:contain;background-repeat:no-repeat;background-position:center}
 .panel .p-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .panel .p-thumbs:empty{display:none}
 .panel .p-thumbs button{width:66px;height:48px;padding:0;border-radius:10px;cursor:pointer;border:1px solid var(--glass-brd);background-size:cover;background-position:center;opacity:.65;transition:opacity .2s ease,border-color .2s ease,transform .2s var(--spring)}
@@ -435,8 +435,8 @@ footer .switch a:hover{color:var(--glow)}
       <article class="card" data-project="bras">
         <span class="role">Chef de projet</span>
         <div class="media has-media"><img src="assets/proj-bras.jpg" alt="Bras robotique assemblé avec l'équipe" loading="lazy"><span class="glint"></span></div>
-        <div class="card-body"><h3>Bras robotique</h3><p class="one">Conception et coordination d'équipe.</p>
-          <div class="card-tags"><span>Robotique</span><span>Gestion de projet</span></div></div>
+        <div class="card-body"><h3>Bras robotique</h3><p class="one">Bras 5 DOF « NESSO » et son app de contrôle : joystick, commande vocale, mode auto par vision.</p>
+          <div class="card-tags"><span>Robotique</span><span>App Flutter</span><span>Vision / IA</span><span>Chef de projet</span></div></div>
       </article>
       <article class="card" data-project="relaxvest">
         <div class="media has-media"><img src="assets/proj-relax.jpg" alt="Montage électronique du gilet RelaxVest (ESP32)" loading="lazy"><span class="glint"></span></div>
@@ -527,12 +527,13 @@ const PROJECTS = {
     "Électronique embarquée, marqueur ArUco, capteurs de distance.",
     "IA de trajectoire et de rôles (3 étapes), rendu 3D et pub.",
   ],links:[]},
-  bras:{role:"Chef de projet",title:"Bras robotique",media:"assets/proj-bras.jpg",lines:[
-    "Conception mécanique et choix des actionneurs.",
-    "Coordination de l'équipe projet.",
-    "Prototype fonctionnel.",
+  bras:{role:"Chef de projet",title:"Bras robotique « NESSO »",media:["assets/proj-bras.jpg","assets/proj-nesso-app1.jpg","assets/proj-nesso-app2.jpg","assets/proj-nesso-app3.jpg"],lines:[
+    "Bras 5 DOF (base mobile ou fixe) avec caméra.",
+    "App Flutter de contrôle : joystick, boutons de précision, commande vocale.",
+    "Mode auto par vision : détection d'objet (YOLO) et cinématique inverse.",
+    "Conception mécanique, électronique et coordination d'équipe.",
   ],links:[]},
-  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg"],lines:[
+  relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg","assets/proj-relax-app2.jpg","assets/proj-relax-app3.jpg"],lines:[
     "Gilet de relaxation à 12 moteurs pilotés.",
     "Carte ESP32 et application Flutter.",
     "Séquences de vibration paramétrables.",
@@ -661,7 +662,7 @@ function openPanel(key){
   const pm=document.getElementById("p-media");
   const thumbs=document.getElementById("p-thumbs");
   const medias = Array.isArray(p.media) ? p.media : (p.media ? [p.media] : []);
-  const showMain=(src)=>{ pm.style.backgroundImage=`url("${src}")`; pm.style.backgroundSize="cover"; pm.style.backgroundPosition="center"; };
+  const showMain=(src)=>{ pm.style.backgroundImage=`url("${src}")`; pm.style.backgroundSize="contain"; pm.style.backgroundRepeat="no-repeat"; pm.style.backgroundPosition="center"; };
   thumbs.innerHTML="";
   if(medias.length){ showMain(medias[0]); } else { pm.style.backgroundImage=""; }
   if(medias.length>1){
