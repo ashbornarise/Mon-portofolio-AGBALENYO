@@ -384,36 +384,12 @@ footer .switch a:hover{color:var(--glow)}
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav" aria-label="Navigation principale">
-  <a class="brand" href="#" id="navBrand">C.<b>A</b></a>
+  <a class="brand" href="#ecole-projets" id="navBrand">Clément Agbalenyo</a>
   <div class="nav-links" id="navLinks"></div>
 </nav>
 
-<!-- ============ ACCUEIL (sans hash) ============ -->
-<main class="view" id="view-home">
-  <div class="home">
-    <img class="avatar" src="assets/portrait.jpg" alt="Portrait de Clément Agbalenyo">
-    <p class="eyebrow">Portfolio</p>
-    <h1 class="name">Clément Agbalenyo</h1>
-    <p class="tiny">Simulation, mécatronique, usinage. Choisissez la version qui vous concerne.</p>
-    <div class="choose">
-      <a class="choice" href="#ecole">
-        <span class="k">École d'ingénieur</span>
-        <h2>Version école</h2>
-        <p>Pour un jury d'admission : projets, bilan de compétences et trajectoire vers la simulation.</p>
-        <span class="arrow">→</span>
-      </a>
-      <a class="choice" href="#pro">
-        <span class="k">Clients &amp; entreprises</span>
-        <h2>Version pro</h2>
-        <p>Pour une collaboration : réalisations livrées, offres de services et ventures.</p>
-        <span class="arrow">→</span>
-      </a>
-    </div>
-  </div>
-</main>
-
-<!-- ============ ÉCOLE ============ -->
-<main class="view" id="view-ecole">
+<!-- ============ PAGE UNIQUE ============ -->
+<main class="view active" id="view-ecole">
   <section class="hero wrap">
     <div class="hero-text">
       <p class="eyebrow">BUT 3 GMP — parcours SNRV · IUT de Saint-Denis</p>
@@ -468,7 +444,7 @@ footer .switch a:hover{color:var(--glow)}
           <div class="card-tags"><span>CNC</span><span>Maintenance</span></div></div>
       </article>
       <article class="card" data-project="esig">
-        <div class="media"><span class="ph">Application web ESIG</span></div>
+        <div class="media has-media"><img src="assets/proj-esig.jpg" alt="Capture de l'application ESIG Atelier" loading="lazy"><span class="glint"></span></div>
         <div class="card-body"><h3>Application web de l'atelier ESIG</h3><p class="one">Outil numérique pour l'atelier.</p>
           <div class="card-tags"><span>Web</span><span>Atelier</span></div></div>
       </article>
@@ -509,101 +485,6 @@ footer .switch a:hover{color:var(--glow)}
   </section>
 </main>
 
-<!-- ============ PRO ============ -->
-<main class="view" id="view-pro">
-  <section class="hero wrap">
-    <div class="hero-text">
-      <p class="eyebrow">Mécanique · Électronique · Code</p>
-      <h1 class="hero-title">De l'idée au <em>livrable.</em></h1>
-      <p class="sub">Six chantiers livrés en parallèle en 2026.</p>
-      <div class="cta">
-        <a class="neo primary" href="#pro-contact">Démarrer un projet</a>
-        <a class="neo ghost" href="#pro-real">Voir les réalisations</a>
-      </div>
-    </div>
-    <figure class="hero-portrait"><img src="assets/portrait-hero.jpg" alt="Portrait de Clément Agbalenyo" loading="lazy"></figure>
-  </section>
-
-  <!-- offres -->
-  <section class="wrap">
-    <div class="sec-head"><p class="eyebrow">Offres</p></div>
-    <div class="offers">
-      <div class="offer"><span class="no">01</span><h3>CNC &amp; usinage</h3><p>Programmation, réglage, production.</p></div>
-      <div class="offer"><span class="no">02</span><h3>Prototypage mécatronique</h3><p>De la carte au produit testé.</p></div>
-      <div class="offer"><span class="no">03</span><h3>Outils numériques sur mesure</h3><p>Web, automatisation, data.</p></div>
-      <div class="offer"><span class="no">04</span><h3>Création &amp; distribution musicale</h3><p>Production et diffusion.</p></div>
-    </div>
-  </section>
-
-  <!-- réalisations -->
-  <section class="wrap" id="pro-real">
-    <div class="sec-head"><p class="eyebrow">Réalisations</p></div>
-    <div class="grid">
-      <article class="card" data-project="tour">
-        <div class="media"><span class="ph">Tour CNC</span></div>
-        <div class="card-body"><h3>Tour CNC remis en service</h3><p class="one">Machine diagnostiquée, réparée, remise en production.</p>
-          <div class="card-tags"><span>CNC</span><span>Maintenance</span></div></div>
-      </article>
-      <article class="card" data-project="fraiseuse">
-        <div class="media"><span class="ph">Fraiseuse</span></div>
-        <div class="card-body"><h3>Diagnostic d'une fraiseuse</h3><p class="one">Expertise et plan de remise en état.</p>
-          <div class="card-tags"><span>Diagnostic</span><span>Usinage</span></div></div>
-      </article>
-      <article class="card" data-project="validateur">
-        <div class="media"><span class="ph">Validateur CNC</span></div>
-        <div class="card-body"><h3>Validateur de programmes CNC</h3><p class="one">Vérification automatique du G-code avant usinage.</p>
-          <div class="card-tags"><span>Python</span><span>G-code</span></div></div>
-      </article>
-      <article class="card" data-project="crm">
-        <div class="media"><span class="ph">CRM + site + facturation</span></div>
-        <div class="card-body"><h3>CRM + site + facturation</h3><p class="one">Suite numérique complète pour une activité.</p>
-          <div class="card-tags"><span>Web</span><span>CRM</span><span>Facturation</span></div></div>
-      </article>
-      <article class="card" data-project="relaxvest-pro">
-        <div class="media"><span class="ph">RelaxVest</span></div>
-        <div class="card-body"><h3>RelaxVest</h3><p class="one">Gilet de relaxation connecté : ESP32, Flutter, 12 moteurs.</p>
-          <div class="card-tags"><span>ESP32</span><span>Flutter</span><span>Mécatronique</span></div></div>
-      </article>
-      <article class="card" data-project="swug">
-        <div class="media"><span class="ph">SWUG Togo</span></div>
-        <div class="card-body"><h3>Meetup SWUG Togo</h3><p class="one">Organisation d'un meetup SolidWorks User Group.</p>
-          <div class="card-tags"><span>Communauté</span><span>SolidWorks</span></div></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- chiffres -->
-  <section class="wrap">
-    <div class="sec-head"><p class="eyebrow">Chiffres</p></div>
-    <div class="stats">
-      <div class="stat"><b>6</b><span>chantiers livrés</span></div>
-      <div class="stat"><b>91/98</b><span>PageSpeed mobile / desktop</span></div>
-      <div class="stat"><b>4</b><span>contrats-types</span></div>
-      <div class="stat"><b>9</b><span>niveaux tarifaires studio</span></div>
-    </div>
-  </section>
-
-  <!-- ventures -->
-  <section class="wrap">
-    <div class="sec-head"><p class="eyebrow">Ventures</p></div>
-    <div class="ventures">
-      <div class="venture"><h3>Nova Luz Music Label</h3><p>Label musical.</p></div>
-      <div class="venture"><h3>Cauri Charts</h3><p>Classements &amp; data musicale.</p></div>
-      <div class="venture"><h3>CYNERA</h3><p>Robotique &amp; ingénierie.</p></div>
-    </div>
-  </section>
-
-  <!-- contact -->
-  <section class="wrap" id="pro-contact">
-    <div class="contact-box">
-      <p class="eyebrow">Contact</p>
-      <h2>Un projet en tête ?</h2>
-      <p class="lead" style="margin:0 auto">Décrivez votre besoin, je reviens vers vous.</p>
-      <div class="contact-links" id="contact-pro"></div>
-    </div>
-  </section>
-</main>
-
 <!-- panneau détail projet -->
 <div class="overlay" id="overlay"></div>
 <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Détail du projet">
@@ -615,10 +496,9 @@ footer .switch a:hover{color:var(--glow)}
   <div class="p-links" id="p-links"></div>
 </aside>
 
-<!-- pied de page + bascule discrète -->
+<!-- pied de page -->
 <footer class="wrap" id="footer">
-  <div>© <span id="year"></span> Clément Agbalenyo</div>
-  <div class="switch" id="footerSwitch"></div>
+  <div>© <span id="year"></span> Clément Agbalenyo · Portfolio</div>
 </footer>
 
 <script>
@@ -656,7 +536,7 @@ const PROJECTS = {
     "Réparation mécanique et électronique.",
     "Retour à la production.",
   ],links:[]},
-  esig:{role:"Développement web",title:"Application web de l'atelier ESIG",lines:[
+  esig:{role:"Développement web",title:"Application web de l'atelier ESIG",media:"assets/proj-esig.jpg",lines:[
     "Outil numérique pour la gestion de l'atelier.",
     "Interface web dédiée aux usages réels.",
   ],links:[]},
@@ -689,53 +569,22 @@ const PROJECTS = {
 };
 
 /* =====================================================================
-   ROUTAGE par location.hash
+   PAGE UNIQUE — liens de nav + mise en place
    ===================================================================== */
-const VIEWS = {home:"view-home", ecole:"view-ecole", pro:"view-pro"};
-const NAVS = {
-  ecole:[["Projets","#ecole-projets"],["Compétences","#ecole-contact"],["Contact","#ecole-contact"]],
-  pro:[["Réalisations","#pro-real"],["Ventures","#pro-contact"],["Contact","#pro-contact"]],
-};
-
-function currentRoute(){
-  const h=(location.hash||"").replace("#","").split(/[^a-z\-]/i)[0];
-  if(h==="ecole") return "ecole";
-  if(h==="pro")   return "pro";
-  return "home";
-}
-
-function render(){
-  const r=currentRoute();
-  Object.values(VIEWS).forEach(id=>document.getElementById(id).classList.remove("active"));
-  document.getElementById(VIEWS[r]).classList.add("active");
-
-  const nav=document.getElementById("nav");
-  nav.style.display = r==="home" ? "none" : "flex";
-
-  // liens de nav selon la version
+const NAV_LINKS = [["Projets","#ecole-projets"],["Compétences","#ecole-bilan"],["Contact","#ecole-contact"]];
+function setup(){
   const links=document.getElementById("navLinks");
   links.innerHTML="";
-  if(r!=="home"){
-    (NAVS[r]||[]).forEach(([label,href])=>{
-      const a=document.createElement("a");
-      a.className="navlink";a.href=href;a.textContent=label;
-      links.appendChild(a);
-    });
-  }
-
-  // bascule discrète en pied de page
-  const sw=document.getElementById("footerSwitch");
-  if(r==="ecole") sw.innerHTML='Vous êtes une entreprise ? <a href="#pro">Voir la version pro</a>';
-  else if(r==="pro") sw.innerHTML='Membre d\'un jury ? <a href="#ecole">Voir la version école</a>';
-  else sw.innerHTML='<a href="#ecole">Version école</a> · <a href="#pro">Version pro</a>';
-
-  window.scrollTo(0,0);
+  NAV_LINKS.forEach(([label,href])=>{
+    const a=document.createElement("a");
+    a.className="navlink";a.href=href;a.textContent=label;
+    links.appendChild(a);
+  });
   observeCards();
   markActiveNav();
   initLazyVideos();
-  if(r==="ecole"){ requestAnimationFrame(()=>requestAnimationFrame(layoutToile)); }
+  requestAnimationFrame(()=>requestAnimationFrame(layoutToile));
 }
-window.addEventListener("hashchange",render);
 
 /* =====================================================================
    NAV : condensation au défilement + lien actif
@@ -1011,7 +860,7 @@ document.getElementById("year").textContent=new Date().getFullYear();
 buildContacts();
 buildToile();
 gradePills();
-render();
+setup();
 onScroll();
 </script>
 </body>
