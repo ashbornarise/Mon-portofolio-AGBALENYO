@@ -41,7 +41,7 @@
   "description": "Simulation, conception mécanique (CAO), mécatronique et usinage CNC.",
   "alumniOf": { "@type": "CollegeOrUniversity", "name": "IUT de Saint-Denis (BUT GMP, parcours SNRV)" },
   "knowsAbout": ["Simulation numérique", "CAO", "SolidWorks", "Fusion 360", "Mécatronique", "ESP32", "Usinage CNC", "Python", "Métrologie"],
-  "sameAs": ["https://github.com/ashbornarise"]
+  "sameAs": ["https://github.com/ashbornarise","https://www.linkedin.com/in/cl%C3%A9ment-kokou-agbalenyo-123304342/"]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -308,7 +308,7 @@ section{padding:clamp(56px,10vh,110px) 0}
 .overlay{position:fixed;inset:0;z-index:60;background:rgba(15,61,71,.28);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s ease}
 .overlay.open{opacity:1;pointer-events:auto}
 .panel{
-  position:fixed;z-index:61;right:0;top:0;height:100%;width:min(460px,92vw);
+  position:fixed;z-index:61;right:0;top:0;height:100%;width:min(640px,96vw);
   background:var(--paper);
   border-left:1px solid var(--glass-brd);
   box-shadow:-30px 0 80px rgba(15,61,71,.22);
@@ -326,6 +326,24 @@ section{padding:clamp(56px,10vh,110px) 0}
 .panel .p-thumbs button{width:66px;height:48px;padding:0;border-radius:10px;cursor:pointer;border:1px solid var(--glass-brd);background-size:cover;background-position:center;opacity:.65;transition:opacity .2s ease,border-color .2s ease,transform .2s var(--spring)}
 .panel .p-thumbs button:hover{opacity:1;transform:translateY(-2px)}
 .panel .p-thumbs button.active{opacity:1;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+/* ---- carte mentale d'explication (dans le panneau) ---- */
+.panel .p-mind{position:relative;margin:18px 0 8px}
+.panel .p-mind:empty{display:none}
+.p-mind .mm-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.p-mind .mm-links line{stroke:var(--ink);stroke-opacity:.22;stroke-width:1.2}
+.p-mind .mm-links line.root{stroke:var(--accent);stroke-opacity:.6;stroke-width:1.6}
+.p-mind .mm-root{position:relative;z-index:1;width:max-content;max-width:100%;margin:0 auto 20px;
+  padding:12px 20px;border-radius:16px;text-align:center;color:var(--ink);font-weight:700;
+  font-family:'Bricolage Grotesque',sans-serif;line-height:1.1;
+  background:radial-gradient(circle at 35% 30%,#ffc5ab,var(--accent));box-shadow:0 10px 26px rgba(15,61,71,.18)}
+.p-mind .mm-root small{display:block;font-family:'Inter',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.p-mind .mm-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 16px}
+@media(max-width:520px){.p-mind .mm-grid{grid-template-columns:1fr}}
+.p-mind .mm-branch{display:flex;flex-direction:column;align-items:center;gap:9px}
+.p-mind .mm-cat{padding:8px 15px;border-radius:999px;font-size:.8rem;font-weight:700;color:#eaf4f6;
+  background:var(--ink);box-shadow:0 6px 16px rgba(15,61,71,.18)}
+.p-mind .mm-leaf{padding:7px 13px;border-radius:12px;font-size:.78rem;line-height:1.25;text-align:center;color:var(--ink);
+  background:color-mix(in srgb, var(--ink) 7%, var(--surface));border:1px solid var(--glass-brd);max-width:96%}
 .panel .p-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
 .panel-close{
   position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;cursor:pointer;border:none;
@@ -498,6 +516,7 @@ footer .switch a:hover{color:var(--glow)}
   <h2 id="p-title"></h2>
   <div class="p-media" id="p-media"></div>
   <div class="p-thumbs" id="p-thumbs"></div>
+  <div class="p-mind" id="p-mind"></div>
   <ul class="p-lines" id="p-lines"></ul>
   <div class="p-links" id="p-links"></div>
 </aside>
@@ -513,7 +532,7 @@ footer .switch a:hover{color:var(--glow)}
    ===================================================================== */
 const CONFIG = {
   email:    "agbalenyoclementkokou@gmail.com",
-  linkedin: "",                      // ex : https://linkedin.com/in/...
+  linkedin: "https://www.linkedin.com/in/cl%C3%A9ment-kokou-agbalenyo-123304342/",
   github:   "https://github.com/ashbornarise"
 };
 
@@ -521,17 +540,27 @@ const CONFIG = {
    DÉTAILS PROJETS (3 à 5 lignes max au clic + liens optionnels)
    ===================================================================== */
 const PROJECTS = {
-  apis:{role:"Projet phare",title:"APIS — robot autonome",media:"assets/apis-hero.jpg",lines:[
+  apis:{role:"Projet phare",title:"APIS — robot autonome",media:"assets/apis-hero.jpg",
+    mindTitle:"APIS",
+    detail:{
+      "Conception":["CAO paramétrique par code (CadQuery / OpenCascade)","Cotes dans un dictionnaire — tout se régénère","Ø60 × 35 mm, 27 corps nommés"],
+      "Choix (logique)":["Voie 75 mm mesurée hors-tout","Roue 6,5 mm → 1 mm de jeu avec la coque","Moteurs N20 (seuls à tenir dans Ø56)","Li-Po 502030 (seul format qui passe)"],
+      "Tests":["Détection d'interférences","Jeux vérifiés (roue-coque 1,0 mm…)","Masse par volume × densité","Centre de gravité calculé"],
+      "Résultats":["Masse ≈ 86,5 g","CG 1,4 mm derrière l'axe → stable","Bascule si freinage > 0,75 m/s²"]
+    },lines:[
     "Robot Ø60 mm conçu en CAO paramétrique par code (CadQuery / OpenCascade).",
     "Vérification simulée : interférences, jeux, masse ≈ 86,5 g, centre de gravité, basculement.",
-    "Électronique embarquée, marqueur ArUco, capteurs de distance.",
-    "IA de trajectoire et de rôles (3 étapes), rendu 3D et pub.",
   ],links:[]},
-  bras:{role:"Chef de projet",title:"Bras robotique « NESSO »",media:["assets/proj-bras.jpg","assets/proj-nesso-app1.jpg","assets/proj-nesso-app2.jpg","assets/proj-nesso-app3.jpg"],lines:[
+  bras:{role:"Chef de projet",title:"Bras robotique « NESSO »",media:["assets/proj-bras.jpg","assets/proj-nesso-app1.jpg","assets/proj-nesso-app2.jpg","assets/proj-nesso-app3.jpg"],
+    mindTitle:"NESSO",
+    detail:{
+      "Architecture":["Arduino Mega — 7 servos + sécurité","ESP32 — point d'accès WiFi + WebSocket","Serveur Python FastAPI","App Flutter + jumeau 3D"],
+      "Choix (logique)":["Firmware unique (flag base fixe / mobile)","4× MG995 (force) + 3× MG90S (précision)","Protocole JSON ligne par ligne"],
+      "Intelligence":["Vision YOLOv8 — détection d'objet","Commande vocale Whisper (FR)","Cinématique inverse (scipy)"],
+      "Sécurité / Tests":["Priorité Python > App (verrou 5 s)","Watchdog matériel","Pick & place automatique"]
+    },lines:[
     "Bras 5 DOF (base mobile ou fixe) avec caméra.",
-    "App Flutter de contrôle : joystick, boutons de précision, commande vocale.",
-    "Mode auto par vision : détection d'objet (YOLO) et cinématique inverse.",
-    "Conception mécanique, électronique et coordination d'équipe.",
+    "App Flutter de contrôle : joystick, commande vocale, mode auto par vision.",
   ],links:[]},
   relaxvest:{role:"Mécatronique",title:"RelaxVest",media:["assets/proj-relax.jpg","assets/proj-relax-app.jpg","assets/proj-relax-app2.jpg","assets/proj-relax-app3.jpg"],lines:[
     "Gilet de relaxation à 12 moteurs pilotés.",
@@ -675,13 +704,57 @@ function openPanel(key){
       thumbs.appendChild(btn);
     });
   }
-  const ul=document.getElementById("p-lines"); ul.innerHTML="";
-  (p.lines||[]).slice(0,5).forEach(l=>{const li=document.createElement("li");li.textContent=l;ul.appendChild(li);});
+  // explication : carte mentale si p.detail, sinon liste simple
+  const ul=document.getElementById("p-lines");
+  const mindBox=document.getElementById("p-mind");
+  if(p.detail){ ul.innerHTML=""; buildMind(mindBox, p.detail, p.mindTitle||p.title); }
+  else {
+    mindBox.innerHTML=""; ul.innerHTML="";
+    (p.lines||[]).slice(0,5).forEach(l=>{const li=document.createElement("li");li.textContent=l;ul.appendChild(li);});
+  }
   const lk=document.getElementById("p-links"); lk.innerHTML="";
   (p.links||[]).forEach(([label,href])=>{ if(!href)return; const a=document.createElement("a");a.className="neo";a.href=href;a.target="_blank";a.rel="noopener";a.textContent=label;lk.appendChild(a);});
   overlay.classList.add("open"); panel.classList.add("open");
+  if(p.detail) requestAnimationFrame(()=>requestAnimationFrame(layoutMind));
   document.getElementById("panelClose").focus();
 }
+/* ---- carte mentale : construit les nœuds puis trace les liens mesurés ---- */
+let mindBoxRef=null;
+function buildMind(box, detail, title){
+  mindBoxRef=box;
+  box.innerHTML="";
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg"); svg.setAttribute("class","mm-links"); box.appendChild(svg);
+  const root=document.createElement("div"); root.className="mm-root";
+  root.innerHTML='<small>Comment c\'est conçu</small>'+ (title||"Projet"); box.appendChild(root); box._root=root;
+  const grid=document.createElement("div"); grid.className="mm-grid"; box.appendChild(grid);
+  box._branches=[];
+  Object.keys(detail).forEach(cat=>{
+    const br=document.createElement("div"); br.className="mm-branch";
+    const c=document.createElement("div"); c.className="mm-cat"; c.textContent=cat; br.appendChild(c);
+    const leaves=[];
+    (detail[cat]||[]).forEach(txt=>{ const lf=document.createElement("div"); lf.className="mm-leaf"; lf.textContent=txt; br.appendChild(lf); leaves.push(lf); });
+    grid.appendChild(br); box._branches.push({cat:c, leaves});
+  });
+  box._svg=svg;
+}
+function layoutMind(){
+  const box=mindBoxRef; if(!box||!box._svg||!box.isConnected) return;
+  const svg=box._svg, R=box.getBoundingClientRect();
+  if(!R.width) return;
+  svg.setAttribute("width",R.width); svg.setAttribute("height",R.height); svg.setAttribute("viewBox","0 0 "+R.width+" "+R.height);
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const ctr=(el)=>{ const r=el.getBoundingClientRect(); return {x:r.left-R.left+r.width/2, y:r.top-R.top+r.height/2, top:r.top-R.top, bot:r.bottom-R.top}; };
+  const line=(x1,y1,x2,y2,cls)=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",x1);l.setAttribute("y1",y1);l.setAttribute("x2",x2);l.setAttribute("y2",y2); if(cls)l.setAttribute("class",cls); svg.appendChild(l); };
+  const rt=ctr(box._root);
+  (box._branches||[]).forEach(b=>{
+    const c=ctr(b.cat);
+    line(rt.x, rt.bot, c.x, c.top, "root");
+    b.leaves.forEach(lf=>{ const p=ctr(lf); line(c.x, c.bot, p.x, p.top); });
+  });
+}
+window.addEventListener("resize",()=>{ if(panel.classList.contains("open")) requestAnimationFrame(layoutMind); },{passive:true});
 function closePanel(){
   overlay.classList.remove("open"); panel.classList.remove("open");
   if(lastFocus) lastFocus.focus();
